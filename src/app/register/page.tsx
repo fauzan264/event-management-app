@@ -11,6 +11,7 @@ import { register } from "@/services/auth";
 import Swal from "sweetalert2";
 import { AxiosError } from "axios";
 import { registerSchema } from "../../features/auth/register/schemas/registerSchema";
+import Link from "next/link";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -344,6 +345,12 @@ export default function RegisterPage() {
                 </button>
               </div>
             </form>
+            <p className="mt-3 text-white">
+              You have an account?{" "}
+              <Link href="/login" className="text-lime-400">
+                Login
+              </Link>
+            </p>
           </div>
         </div>
       </div>
