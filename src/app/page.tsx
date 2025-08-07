@@ -98,58 +98,72 @@ export default function Home() {
                 </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-10 my-10">
-                {eventsMusic?.map((item, index) => {
-                    return (
-                        <Link href={`/events/${item.id}`} key={index}>
-                            <EventCard
-                                id={item.id}
-                                event_name={item.event_name}
-                                image_url={item.image_url}
-                                description={item.description}
-                                start_date={item.start_date}
-                                end_date={item.end_date}
-                                venue={item.venue}
-                                price={item.price}
-                                category={item.category}
-                            />
+            <div className="w-full space-y-12 my-15">
+                {/* Music Events */}
+                <div className=" flex-flex-col items-center mx-10">
+                    <h2 className="text-xl text-white font-semibold mb-4 ">
+                        🎵 Upcoming Music Events
+                    </h2>
+                    <div className="grid grid-cols-3 gap-10">
+                        {eventsMusic?.map((item, index) => (
+                            <Link href={`/events/${item.id}`} key={index}>
+                                <EventCard {...item} />
+                            </Link>
+                        ))}
+                    </div>
+                    <div className="flex justify-center">
+                        <Link
+                            href={`/events?category=MUSIC`}
+                            className="btn btn-sm btn-primary mt-4"
+                        >
+                            Find more events
                         </Link>
-                    );
-                })}
-                {eventsSport?.map((item, index) => {
-                    return (
-                        <Link href={`/events/${item.id}`} key={index}>
-                            <EventCard
-                                id={item.id}
-                                event_name={item.event_name}
-                                image_url={item.image_url}
-                                description={item.description}
-                                start_date={item.start_date}
-                                end_date={item.end_date}
-                                venue={item.venue}
-                                price={item.price}
-                                category={item.category}
-                            />
+                    </div>
+                </div>
+
+                {/* Sport Events */}
+                <div className=" flex-flex-col items-center mx-10">
+                    <h2 className="text-xl text-white font-semibold mb-4">
+                        🏅 Upcoming Sport Events
+                    </h2>
+                    <div className="grid grid-cols-3 gap-10">
+                        {eventsSport?.map((item, index) => (
+                            <Link href={`/events/${item.id}`} key={index}>
+                                <EventCard {...item} />
+                            </Link>
+                        ))}
+                    </div>
+                    <div className="flex justify-center">
+                        <Link
+                            href={`/events?category=SPORT`}
+                            className="btn btn-sm btn-primary mt-4"
+                        >
+                            Find more events
                         </Link>
-                    );
-                })}
-                {eventsEdu?.map((item, index) => {
-                    return (
-                        <Link href={`/events/${item.id}`} key={index}>
-                            <EventCard
-                                id={item.id}
-                                event_name={item.event_name}
-                                image_url={item.image_url}
-                                description={item.description}
-                                start_date={item.start_date}
-                                end_date={item.end_date}
-                                venue={item.venue}
-                                price={item.price}
-                                category={item.category}
-                            />
+                    </div>
+                </div>
+
+                {/* Education Events */}
+                <div className=" flex-flex-col items-center mx-10">
+                    <h2 className="text-xl text-white font-semibold mb-4">
+                        🎓 Upcoming Education Events
+                    </h2>
+                    <div className="grid grid-cols-3 gap-10">
+                        {eventsEdu?.map((item, index) => (
+                            <Link href={`/events/${item.id}`} key={index}>
+                                <EventCard {...item} />
+                            </Link>
+                        ))}
+                    </div>
+                    <div className="flex justify-center">
+                        <Link
+                            href={`/events?category=EDUCATION`}
+                            className="btn btn-sm btn-primary mt-4"
+                        >
+                            Find more events
                         </Link>
-                    );
-                })}
+                    </div>
+                </div>
             </div>
         </main>
     );
