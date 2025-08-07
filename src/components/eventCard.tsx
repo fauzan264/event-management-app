@@ -21,6 +21,12 @@ export default function EventCard(props: IEventList) {
         }).format(price);
     };
 
+    const categoryColors: Record<string, string> = {
+        MUSIC: " bg-blue-700 text-lime-400",
+        SPORT: "bg-pink-500 text-lime-400",
+        EDUCATION: "bg-purple-900 text-lime-400",
+    };
+
     return (
         <>
             <div className="flex flex-cols mx-10 gap-10">
@@ -36,11 +42,13 @@ export default function EventCard(props: IEventList) {
                     <div className="card-body">
                         <h2 className="card-title line-clamp-2">
                             {props?.event_name}
-                            <div className="badge badge-secondary">Promo</div>
                         </h2>
                         <p>
-                            {formatDate(props.start_date)} -{" "}
-                            {formatDate(props.end_date)}
+                            {props.start_date === props.end_date
+                                ? formatDate(props.start_date)
+                                : `${formatDate(
+                                      props.start_date
+                                  )} - ${formatDate(props.end_date)}`}
                         </p>
 
                         <p className="line-clamp-2">{props.description}</p>
@@ -48,9 +56,14 @@ export default function EventCard(props: IEventList) {
                             <FaLocationDot />
                             {props?.venue?.venue_name}
                         </p>
-                        <p>{formatPrice(props.price)}</p>
+                        <p>
+                            {props.price === 0
+                                ? "FREE"
+                                : formatPrice(props.price)}
+                        </p>
                         <div className="card-actions justify-end">
-                            <div className="badge badge-outline">
+                            <div className="badge badge-secondary">Promo</div>
+                            <div className={`badge ${categoryColors[props?.category]} text-bold`}>
                                 {props?.category}
                             </div>
                         </div>
