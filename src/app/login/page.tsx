@@ -9,9 +9,11 @@ import Swal from "sweetalert2";
 import { MdEmail } from "react-icons/md";
 import { TbLockPassword } from "react-icons/tb";
 import Link from "next/link";
+import useAuthStore from "@/store/useAuthStore";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { setAuth } = useAuthStore();
 
   const onLoginAccount = async ({
     email,
@@ -26,7 +28,19 @@ export default function LoginPage() {
         showConfirmButton: false,
       });
 
-      router.push("/app");
+      if (res.status == 200) {
+        setAuth({
+          token: res.data.data.token,
+          fullname: res.data.data.full_name,
+          userRole: res.data.data.role,
+        });
+
+        if (res.data.data.role == "EVENT_ORGANIZER") {
+          router.push("/app");
+        } else {
+          router.push("/");
+        }
+      }
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         const message =

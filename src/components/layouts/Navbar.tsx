@@ -1,12 +1,16 @@
 "use client";
 
+import useAuthStore from "@/store/useAuthStore";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaPlus, FaSearch } from "react-icons/fa";
 import { HiOutlineMenuAlt1 } from "react-icons/hi";
+import { FaUserCircle } from "react-icons/fa";
 
 export default function Navbar() {
+  const { logout } = useAuthStore();
+  const auth = useAuthStore();
   const [isScrolled, setIscrolled] = useState(false);
   const [activeHref, setActiveHref] = useState("");
   const pathname = usePathname();
@@ -14,6 +18,11 @@ export default function Navbar() {
 
   const handleClick = (href: string) => {
     setActiveHref(href);
+  };
+
+  const onLogoutUser = () => {
+    logout();
+    router.push("/login");
   };
 
   useEffect(() => {
@@ -26,12 +35,8 @@ export default function Navbar() {
   }, []);
 
   const nav_items = [
-    {
-      href: "/create",
-      label: "Create Event",
-      icon: <FaPlus />,
-    },
     { href: "/", label: "Home" },
+    { href: "/event", label: "Event" },
     { href: "/login", label: "Login" },
   ];
 
@@ -40,22 +45,31 @@ export default function Navbar() {
       className={`navbar fixed font-bold shadow-sm transition duration-300 left-0 top-0 z-99 px-10 bg-black text-gray-200`}
     >
       <div className="navbar-start gap-5">
-        <div className="dropdown">
-          <div className="btn btn-ghost lg:hidden">
-            <HiOutlineMenuAlt1 className="w-6 h-6" />
+        {!pathname.startsWith("/app") ? (
+          <div className="dropdown">
+            <div className="btn btn-ghost lg:hidden">
+              <HiOutlineMenuAlt1 className="w-6 h-6" />
+            </div>
+            <ul className="menu menu-sm dropdown-content rounded-b box mt-3 w-52 p-2 gap-5 shadow z-100">
+              {nav_items.map((nav_item, i) => {
+                return (
+                  <li key={i}>
+                    <a href={nav_item.href}>{nav_item.label}</a>
+                  </li>
+                );
+              })}
+            </ul>
           </div>
-          <ul className="menu menu-sm dropdown-content rounded-b box mt-3 w-52 p-2 gap-5 shadow z-100">
-            {nav_items.map((nav_item, i) => {
-              return (
-                <li key={i}>
-                  <a href={nav_item.href}>{nav_item.label}</a>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
+        ) : (
+          <label
+            htmlFor="my-drawer"
+            className="btn btn-ghost drawer-button lg:hidden"
+          >
+            <HiOutlineMenuAlt1 className="w-6 h-6" />
+          </label>
+        )}
         <Link href="/">
-          <h1>Event Management</h1>
+          <h1>Event</h1>
         </Link>
         <label className="input">
           <FaSearch className="text-gray-500" />
@@ -73,6 +87,8 @@ export default function Navbar() {
               <li
                 key={i}
                 className={`rounded-md transition hover:bg-gray-100 hover:text-black ${
+                  auth.fullname != "" && nav_item.href == "/login" && "hidden"
+                } ${
                   activeHref == nav_item.href ? "bg-slate-50 text-black" : ""
                 }`}
               >
@@ -84,7 +100,6 @@ export default function Navbar() {
                     href={nav_item.href}
                     className="btn btn-sm border-0 bg-blue-700 hover:bg-blue-800 active:bg-blue-800 transition ease-in-out duration-300 text-gray-200 focus:outline-none focus:ring-0"
                   >
-                    {nav_item.icon && <span>{nav_item.icon}</span>}
                     {nav_item.label}
                   </Link>
                 ) : (
@@ -94,11 +109,6 @@ export default function Navbar() {
                     }}
                     href={nav_item.href}
                   >
-                    {nav_item.icon && (
-                      <span className="transition group-hover:text-black">
-                        {nav_item.icon}
-                      </span>
-                    )}
                     {nav_item.label}
                   </Link>
                 )}
@@ -107,6 +117,31 @@ export default function Navbar() {
           })}
         </ul>
       </div>
+      {auth?.fullname && (
+        <div className="dropdown dropdown-end ml-auto">
+          <div
+            tabIndex={0}
+            role="button"
+            className="btn btn-ghost btn-md avatar flex"
+          >
+            <div className="w-7 rounded-full">
+              <FaUserCircle className="w-full h-full" />
+            </div>
+            <span className="ml-1 my-auto">{auth?.fullname.split(" ")[0]}</span>
+          </div>
+          <ul
+            tabIndex={0}
+            className="menu menu-sm dropdown-content bg-purple-900 rounded-box z-1 mt-3 w-52 p-2 shadow text-gray-200"
+          >
+            <li>
+              <Link href={"/app/setting"}>Profile</Link>
+            </li>
+            <li>
+              <button onClick={() => onLogoutUser()}>Logout</button>
+            </li>
+          </ul>
+        </div>
+      )}
     </div>
   );
 }

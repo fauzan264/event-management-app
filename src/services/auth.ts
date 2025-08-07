@@ -82,3 +82,11 @@ export const changePassword = ({
     }
   );
 };
+
+export const sessionLogin = ({ token }: { token: string }) => {
+  return axiosInstance.get("/auth/session", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
