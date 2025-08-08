@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { IEventList } from "@/components/type";
@@ -8,27 +8,14 @@ import Image from "next/image";
 import { FaLocationDot } from "react-icons/fa6";
 import { MdDateRange } from "react-icons/md";
 import { GrTicket } from "react-icons/gr";
+import { formatDate } from "@/app/utils/dateFormatter";
+import { formatPrice } from "@/app/utils/priceFormatter";
 
 export default function EventDetailPage() {
-    const formatDate = (dateStr: string) => {
-        const date = new Date(dateStr);
-        return new Intl.DateTimeFormat("en-US", {
-            day: "numeric",
-            month: "long",
-            year: "numeric",
-        }).format(date);
-    };
+    
+    const { eventId } = useParams();
+    const router = useRouter();
 
-    const formatPrice = (price: number) => {
-        return new Intl.NumberFormat("id-ID", {
-            style: "currency",
-            currency: "IDR",
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0,
-        }).format(price);
-    };
-
-    const { id } = useParams();
     const [event, setEvent] = useState<IEventList | null>(null);
     const [loading, setLoading] = useState(true); // untuk cek apakah sedang fetch
     const [error, setError] = useState<string | null>(null); // untuk cek kalau fetch gagal
@@ -39,7 +26,7 @@ export default function EventDetailPage() {
 
         try {
             const res = await axios.get(
-                `${process.env.NEXT_PUBLIC_API_URL}/api/events/${id}`
+                `${process.env.NEXT_PUBLIC_API_URL}/api/events/${eventId}`
             );
             setEvent(res.data.data);
         } catch (err) {
@@ -51,12 +38,12 @@ export default function EventDetailPage() {
     };
 
     useEffect(() => {
-        console.log("Params ID:", id);
+        console.log("Params ID:", eventId);
 
-        if (id) {
+        if (eventId) {
             OnGetEvenDetail();
         }
-    }, [id]);
+    }, [eventId]);
 
     if (loading) {
         return (
@@ -85,17 +72,23 @@ export default function EventDetailPage() {
     return (
         <main className="p-30 text-white">
             <div className="container mx auto grid grid-cols-2 gap-15">
-                <div
-                    className="relative flex item-start w-full"
-                    style={{ aspectRatio: "3 / 2" }}
-                >
-                    <Image
-                        src={event.image_url}
-                        alt="Banner Event"
-                        fill
-                        className="object-contain object-top"
-                    />
+                <div className="flex flex-col w-full">
+                    <div
+                        className="relative w-full"
+                        style={{ aspectRatio: "3 / 2" }}
+                    >
+                        <Image
+                            src={event.image_url}
+                            alt="Banner Event"
+                            fill
+                            className="object-contain object-top"
+                        />
+                    </div>
+                    
+
+                    <div className="mt-10">{event.description}</div>
                 </div>
+
                 <div className="flex flex-col items-start justify-start gap-5">
                     <p className="text-4xl font-extrabold line-clamp-3">
                         {event.event_name}
@@ -128,7 +121,16 @@ export default function EventDetailPage() {
                                 </span>
                             )}
                         </div>
-                        <button className="btn btn-active btn-secondary">Get Ticket Now</button>
+                        {event.available_ticket > 0 && (
+                            <button
+                                className="btn btn-active btn-secondary"
+                                onClick={() =>
+                                    router.push(`/purchase-order/${eventId}`)
+                                }
+                            >
+                                Get Ticket Now
+                            </button>
+                        )}
                     </div>
                 </div>
             </div>
