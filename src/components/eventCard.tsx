@@ -1,25 +1,10 @@
 import { FaLocationDot } from "react-icons/fa6";
 import { IEventList } from "./type";
 import Image from "next/image";
+import { formatDate } from "@/app/utils/dateFormatter";
+import { formatPrice } from "@/app/utils/priceFormatter";
 
 export default function EventCard(props: IEventList) {
-    const formatDate = (dateStr: string) => {
-        const date = new Date(dateStr);
-        return new Intl.DateTimeFormat("en-US", {
-            day: "numeric",
-            month: "long",
-            year: "numeric",
-        }).format(date);
-    };
-
-    const formatPrice = (price: number) => {
-        return new Intl.NumberFormat("id-ID", {
-            style: "currency",
-            currency: "IDR",
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0,
-        }).format(price);
-    };
 
     const categoryColors: Record<string, string> = {
         MUSIC: " bg-blue-700 text-lime-400",
