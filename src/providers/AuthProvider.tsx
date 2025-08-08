@@ -17,6 +17,7 @@ export default function AuthProvider({
 
       setAuth({
         token,
+        id: res?.data.data.id,
         fullname: res?.data.data.fullname,
         userRole: res?.data.data.role,
       });

@@ -7,8 +7,8 @@ export default function Sidebar({ children }: { children: ReactNode }) {
 
   const nav_items = [
     { href: "/app", label: "Dashboard" },
-    { href: "/app/organizer-profile", label: "Organizer Profile" },
-    { href: "/app/event", label: "Event" },
+    { href: "/app/event-organizer", label: "Organizer Profile" },
+    { href: "/app/events", label: "Events" },
     { href: "/app/transactions", label: "Transaction" },
   ];
 

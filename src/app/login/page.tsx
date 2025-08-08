@@ -31,6 +31,7 @@ export default function LoginPage() {
       if (res.status == 200) {
         setAuth({
           token: res.data.data.token,
+          id: res.data.data.id,
           fullname: res.data.data.full_name,
           userRole: res.data.data.role,
         });
