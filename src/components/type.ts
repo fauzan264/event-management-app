@@ -8,8 +8,10 @@ export interface IEventList {
     venue : IVenue,
     price: number,
     category : string,
+    available_ticket : number
 }
 
 export interface IVenue {
   venue_name: string,
+  address : string
 }
