@@ -36,7 +36,7 @@ export default function Navbar() {
 
   const nav_items = [
     { href: "/", label: "Home" },
-    { href: "/event", label: "Event" },
+    { href: "/events", label: "Event" },
     { href: "/login", label: "Login" },
   ];
 

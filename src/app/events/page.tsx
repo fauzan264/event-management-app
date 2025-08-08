@@ -107,13 +107,17 @@ export default function EventsPage() {
             </div>
 
             {/* Event List */}
-            <div className="grid grid-cols-3 gap-10">
-                {events.map((event) => (
-                    <Link href={`/events/${event.id}`} key={event.id}>
-                        <EventCard {...event} />
-                    </Link>
-                ))}
-            </div>
+            {events.length > 0 ? (
+                <div className="grid grid-cols-3 gap-10">
+                    {events.map((event) => (
+                        <Link href={`/events/${event.id}`} key={event.id}>
+                            <EventCard {...event} />
+                        </Link>
+                    ))}
+                </div>
+            ) : (
+                <p className="text-gray-300 text-lg mt-10">No Event Found</p>
+            )}
         </main>
     );
 }
