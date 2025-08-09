@@ -11,3 +11,11 @@ export const myEventOrganizer = ({
     },
   });
 };
+
+export const myProfile = ({ token }: { token: string }) => {
+  return axiosInstance.get(`/users/me`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};

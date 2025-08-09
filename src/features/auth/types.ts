@@ -1,13 +1,14 @@
 export interface IAuth {
   id: string;
   idCardNumber: string;
-  fullname: string;
+  fullName: string;
   dateOfBirth: string;
   email: string;
   password: string;
   phoneNumber: string;
   referralCode: string;
   userRole: string;
+  totalUserPoint: string;
   createdAt: string;
   updatedAt: string;
   deletedAt: string;

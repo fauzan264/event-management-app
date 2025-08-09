@@ -32,7 +32,7 @@ export default function LoginPage() {
         setAuth({
           token: res.data.data.token,
           id: res.data.data.id,
-          fullname: res.data.data.full_name,
+          fullName: res.data.data.full_name,
           userRole: res.data.data.role,
         });
 
