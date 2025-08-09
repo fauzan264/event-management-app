@@ -15,3 +15,7 @@ export interface IVenue {
   venue_name: string,
   address : string
 }
+
+export interface IPurchaseOrder {
+  
+}
