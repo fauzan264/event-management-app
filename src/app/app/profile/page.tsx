@@ -27,12 +27,20 @@ export default function UserProfilePage() {
       <div className="mx-auto w-11/12 my-10">
         <div className="flex">
           <h1 className="text-2xl text-gray-200">My Profile</h1>
-          <Link
-            href={`/app/event-organizer/edit/${profile?.id}`}
-            className="btn btn-sm bg-blue-700 ml-auto text-gray-200 hover:bg-blue-800 active:bg-blue-800 transition ease-in-out duration-300 focus:outline-none focus:ring-0 border-0"
-          >
-            Edit
-          </Link>
+          <div className="ml-auto">
+            <Link
+              href={`/app/profile/change-password`}
+              className="btn btn-sm bg-green-700 ml-auto text-gray-200 hover:bg-green-800 active:bg-green-800 transition ease-in-out duration-300 focus:outline-none focus:ring-0 border-0 mx-2"
+            >
+              Change Password
+            </Link>
+            <Link
+              href={`/app/profile/edit`}
+              className="btn btn-sm bg-blue-700 ml-auto text-gray-200 hover:bg-blue-800 active:bg-blue-800 transition ease-in-out duration-300 focus:outline-none focus:ring-0 border-0 mx-2"
+            >
+              Edit
+            </Link>
+          </div>
         </div>
         <div className="card bg-gray-800 my-5">
           <div className="card-body">
@@ -75,7 +83,7 @@ export default function UserProfilePage() {
                     Date Of Birth
                   </p>
                   <p className="font-semibold text-gray-200 flex-grow-0">
-                    {profile?.dateOfBirth}
+                    {profile?.dateOfBirth.split("-").reverse().join("-")}
                   </p>
                 </div>
                 <div className="flex flex-col md:flex-row">
@@ -118,7 +126,7 @@ export default function UserProfilePage() {
                       : ""}
                   </p>
                 </div> */}
-                {/* <div className="flex flex-col md:flex-row">
+                <div className="flex flex-col md:flex-row">
                   <p className="text-gray-300 w-40 flex-grow-0">Updated At</p>
                   <p className="font-semibold text-gray-200 flex-grow-0">
                     {profile?.updatedAt
@@ -127,7 +135,7 @@ export default function UserProfilePage() {
                         })
                       : ""}
                   </p>
-                </div> */}
+                </div>
               </div>
             </div>
           </div>
