@@ -10,6 +10,7 @@ import Link from "next/link";
 import { deleteEvent } from "@/services/event";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
+import snakecaseKeys from "snakecase-keys";
 
 export default function EventsPage() {
   const { token } = useAuthStore();
@@ -68,7 +69,6 @@ export default function EventsPage() {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
         const res = await deleteEvent({ id, token });
-        console.log(res.data.message);
         Swal.fire(res.data.message, "", "success");
       }
     });
