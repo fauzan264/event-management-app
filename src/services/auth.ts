@@ -11,7 +11,7 @@ export const login = ({
 
 export const register = ({
   idCardNumber,
-  fullname,
+  fullName,
   dateOfBirth,
   email,
   password,
@@ -21,7 +21,7 @@ export const register = ({
 }: Pick<
   IAuth,
   | "idCardNumber"
-  | "fullname"
+  | "fullName"
   | "dateOfBirth"
   | "email"
   | "password"
@@ -33,7 +33,7 @@ export const register = ({
     "/auth/register",
     snakecaseKeys({
       idCardNumber,
-      fullname,
+      fullName,
       dateOfBirth,
       email,
       password,

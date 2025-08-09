@@ -18,7 +18,7 @@ export default function RegisterPage() {
 
   const onRegisterAccount = async ({
     idCardNumber,
-    fullname,
+    fullName,
     dateOfBirth,
     email,
     password,
@@ -28,7 +28,7 @@ export default function RegisterPage() {
   }: Pick<
     IAuth,
     | "idCardNumber"
-    | "fullname"
+    | "fullName"
     | "dateOfBirth"
     | "email"
     | "password"
@@ -39,7 +39,7 @@ export default function RegisterPage() {
     try {
       const res = await register({
         idCardNumber,
-        fullname,
+        fullName,
         dateOfBirth,
         email,
         password,
@@ -76,7 +76,7 @@ export default function RegisterPage() {
   const formik = useFormik({
     initialValues: {
       idCardNumber: "",
-      fullname: "",
+      fullName: "",
       dateOfBirth: "",
       email: "",
       password: "",
@@ -87,7 +87,7 @@ export default function RegisterPage() {
     validationSchema: registerSchema,
     onSubmit: ({
       idCardNumber,
-      fullname,
+      fullName,
       dateOfBirth,
       email,
       password,
@@ -97,7 +97,7 @@ export default function RegisterPage() {
     }) => {
       onRegisterAccount({
         idCardNumber,
-        fullname,
+        fullName,
         dateOfBirth,
         email,
         password,
@@ -157,15 +157,15 @@ export default function RegisterPage() {
                       <FaRegUser />
                       <input
                         type="text"
-                        name="fullname"
-                        id="fullname"
+                        name="fullName"
+                        id="fullName"
                         onChange={formik.handleChange}
-                        value={formik.values.fullname}
+                        value={formik.values.fullName}
                       />
                     </label>
-                    {formik.errors.fullname && formik.touched.fullname && (
+                    {formik.errors.fullName && formik.touched.fullName && (
                       <div className="feedback text-red-600">
-                        {formik.errors.fullname}
+                        {formik.errors.fullName}
                       </div>
                     )}
                   </fieldset>

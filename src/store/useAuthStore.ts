@@ -3,12 +3,12 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 interface IUseAuthStoreState
-  extends Pick<IAuth, "id" | "fullname" | "userRole"> {
+  extends Pick<IAuth, "id" | "fullName" | "userRole"> {
   token: string;
 }
 
 interface IUseAuthStore extends IUseAuthStoreState {
-  setAuth: ({ token, id, fullname, userRole }: IUseAuthStoreState) => void;
+  setAuth: ({ token, id, fullName, userRole }: IUseAuthStoreState) => void;
   logout: () => void;
 }
 
@@ -17,12 +17,12 @@ const useAuthStore = create<IUseAuthStore>()(
     (set) => ({
       token: "",
       id: "",
-      fullname: "",
+      fullName: "",
       userRole: "",
-      setAuth: ({ token, id, fullname, userRole }) =>
-        set({ token, id, fullname, userRole }),
+      setAuth: ({ token, id, fullName, userRole }) =>
+        set({ token, id, fullName, userRole }),
       logout: () => {
-        set({ token: "", id: "", fullname: "", userRole: "" });
+        set({ token: "", id: "", fullName: "", userRole: "" });
         localStorage.removeItem("authToken");
       },
     }),

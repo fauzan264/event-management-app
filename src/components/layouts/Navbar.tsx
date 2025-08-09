@@ -87,7 +87,7 @@ export default function Navbar() {
               <li
                 key={i}
                 className={`rounded-md transition hover:bg-gray-100 hover:text-black ${
-                  auth.fullname != "" && nav_item.href == "/login" && "hidden"
+                  auth.fullName != "" && nav_item.href == "/login" && "hidden"
                 } ${
                   activeHref == nav_item.href ? "bg-slate-50 text-black" : ""
                 }`}
@@ -117,7 +117,7 @@ export default function Navbar() {
           })}
         </ul>
       </div>
-      {auth?.fullname && (
+      {auth?.fullName && (
         <div className="dropdown dropdown-end ml-auto">
           <div
             tabIndex={0}
@@ -127,7 +127,7 @@ export default function Navbar() {
             <div className="w-7 rounded-full">
               <FaUserCircle className="w-full h-full" />
             </div>
-            <span className="ml-1 my-auto">{auth?.fullname.split(" ")[0]}</span>
+            <span className="ml-1 my-auto">{auth?.fullName.split(" ")[0]}</span>
           </div>
           <ul
             tabIndex={0}

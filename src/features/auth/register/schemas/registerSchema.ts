@@ -2,7 +2,7 @@ import * as yup from "yup";
 
 export const registerSchema = yup.object().shape({
   idCardNumber: yup.number().required("ID Card Number is required"),
-  fullname: yup.string().required("Full Name is required"),
+  fullName: yup.string().required("Full Name is required"),
   dateOfBirth: yup.date().required("Date of Birth is required"),
   email: yup
     .string()
