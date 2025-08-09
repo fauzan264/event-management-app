@@ -134,7 +134,7 @@ export default function Navbar() {
             className="menu menu-sm dropdown-content bg-purple-900 rounded-box z-1 mt-3 w-52 p-2 shadow text-gray-200"
           >
             <li>
-              <Link href={"/app/setting"}>Profile</Link>
+              <Link href={"/app/profile"}>Profile</Link>
             </li>
             <li>
               <button onClick={() => onLogoutUser()}>Logout</button>
