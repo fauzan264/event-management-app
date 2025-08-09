@@ -31,10 +31,10 @@ export default function EventOrganizerPage() {
         <div className="flex">
           <h1 className="text-2xl text-gray-200">My Event Organizer</h1>
           <Link
-            href={`/app/event-organizer/update/${eventOrganizer?.id}`}
+            href={`/app/event-organizer/edit/${eventOrganizer?.id}`}
             className="btn btn-sm bg-blue-700 ml-auto text-gray-200 hover:bg-blue-800 active:bg-blue-800 transition ease-in-out duration-300 focus:outline-none focus:ring-0 border-0"
           >
-            Update
+            Edit
           </Link>
         </div>
         <div className="card bg-gray-800 my-5">
