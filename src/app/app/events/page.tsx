@@ -7,9 +7,13 @@ import { myEvents } from "@/services/eventOrganizer";
 import { IEvent } from "@/features/event/types";
 import camelcaseKeys from "camelcase-keys";
 import Link from "next/link";
+import { deleteEvent } from "@/services/event";
+import Swal from "sweetalert2";
+import { useRouter } from "next/navigation";
 
 export default function EventsPage() {
   const { token } = useAuthStore();
+  const router = useRouter();
   const auth = useAuthStore();
   const [eventOrganizer, setEventOrganizer] = useState<IEventOrganizer | null>(
     null
@@ -49,6 +53,25 @@ export default function EventsPage() {
     });
 
     setEvents(camelcaseKeys(res?.data.data.events, { deep: true }));
+  };
+
+  const onDeleteEvent = async ({
+    id,
+    eventName,
+  }: Pick<IEvent, "id" | "eventName">) => {
+    Swal.fire({
+      title: `Are you sure you want to delete the event ${eventName}?`,
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      confirmButtonText: "Delete",
+    }).then(async (result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        const res = await deleteEvent({ id, token });
+        console.log(res.data.message);
+        Swal.fire(res.data.message, "", "success");
+      }
+    });
   };
 
   useEffect(() => {
@@ -113,12 +136,17 @@ export default function EventsPage() {
                         >
                           Edit
                         </Link>
-                        <Link
-                          href={`/app/events/delete/${event.id}`}
+                        <button
+                          onClick={() => {
+                            onDeleteEvent({
+                              id: event.id,
+                              eventName: event.eventName,
+                            });
+                          }}
                           className="btn btn-error btn-sm text-gray-200 hover:shadow-md mx-2 my-2"
                         >
                           Delete
-                        </Link>
+                        </button>
                       </td>
                     </tr>
                   );
