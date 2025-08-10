@@ -11,9 +11,15 @@ import {
 } from "react-icons/md";
 import { IoMdPricetag } from "react-icons/io";
 import { FaTicketAlt } from "react-icons/fa";
+import { createEventSchema } from "@/features/event/schemas/eventSchemas";
+import Swal from "sweetalert2";
+import { useRouter } from "next/navigation";
+import { AxiosError } from "axios";
 
 export default function CreateEventPage() {
+  const router = useRouter();
   const { token } = useAuthStore();
+
   const onCreateEvent = async ({
     eventName,
     category,
@@ -38,7 +44,7 @@ export default function CreateEventPage() {
     | "price"
   > &
     Pick<IVenue, "venueName" | "venueCapacity" | "address"> & {
-      image: string;
+      image: File[];
       token: string;
     }) => {
     try {
@@ -56,7 +62,30 @@ export default function CreateEventPage() {
         image,
         token,
       });
-    } catch (error: unknown) {}
+
+      Swal.fire({
+        title: res.data.message,
+        icon: "success",
+        showConfirmButton: false,
+      });
+
+      router.push("/app/events");
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        const message = error.response?.data.message || "Something went wrong!";
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: message,
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Something went wrong!",
+        });
+      }
+    }
   };
 
   const formik = useFormik({
@@ -71,9 +100,9 @@ export default function CreateEventPage() {
       venueName: "",
       venueCapacity: "",
       address: "",
-      image: "",
+      image: [] as File[],
     },
-    // validationSchema: registerSchema,
+    validationSchema: createEventSchema,
     onSubmit: ({
       eventName,
       category,
@@ -111,6 +140,34 @@ export default function CreateEventPage() {
         <div className="card-body">
           <form onSubmit={formik.handleSubmit}>
             <div className="flex flex-wrap -mx-1">
+              <div className="w-full">
+                <fieldset className="fieldset">
+                  <legend className="fieldset-legend text-gray-200">
+                    Image
+                  </legend>
+                  <input
+                    id="image"
+                    name="image"
+                    type="file"
+                    className="file-input file-input-success"
+                    onChange={(event) => {
+                      const files = Array.from(
+                        event?.currentTarget.files || []
+                      );
+                      console.log(files);
+                      formik.setFieldValue("image", files);
+                    }}
+                    multiple
+                  />
+                  {formik.errors.image && formik.touched.image && (
+                    <div className="feedback text-red-600">
+                      {formik?.touched?.image && formik?.errors?.image && (
+                        <div>{formik?.errors.image.toString()}</div>
+                      )}
+                    </div>
+                  )}
+                </fieldset>
+              </div>
               <div className="w-full md:w-1/2 px-1">
                 <fieldset className="fieldset">
                   <legend className="fieldset-legend text-gray-200">
@@ -136,7 +193,6 @@ export default function CreateEventPage() {
                   )}
                 </fieldset>
               </div>
-
               <div className="w-full md:w-1/2 px-1">
                 <fieldset className="fieldset">
                   <legend className="fieldset-legend text-gray-200">
@@ -172,7 +228,7 @@ export default function CreateEventPage() {
                   >
                     <MdDateRange />
                     <input
-                      type="date"
+                      type="datetime-local"
                       name="startDate"
                       id="startDate"
                       onChange={formik.handleChange}
@@ -198,7 +254,7 @@ export default function CreateEventPage() {
                   >
                     <MdDateRange />
                     <input
-                      type="date"
+                      type="datetime-local"
                       name="endDate"
                       id="endDate"
                       onChange={formik.handleChange}
@@ -224,9 +280,8 @@ export default function CreateEventPage() {
                     placeholder="Description"
                     name="description"
                     onChange={formik.handleChange}
-                  >
-                    {formik.values.description}
-                  </textarea>
+                    value={formik.values.description}
+                  />
                   {formik.errors.description && formik.touched.description && (
                     <div className="feedback text-red-600">
                       {formik.errors.description}
@@ -352,9 +407,8 @@ export default function CreateEventPage() {
                     placeholder="Address"
                     name="address"
                     onChange={formik.handleChange}
-                  >
-                    {formik.values.address}
-                  </textarea>
+                    value={formik.values.address}
+                  />
                   {formik.errors.address && formik.touched.address && (
                     <div className="feedback text-red-600">
                       {formik.errors.address}
