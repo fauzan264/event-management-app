@@ -6,8 +6,9 @@ import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { formattingDateTime } from "../../../../../utils/formattingDate";
+import AuthGuard from "@/hoc/AuthGuard";
 
-export default function EventDetailPage() {
+function EventDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [event, setEvent] = useState<IEvent | null>(null);
 
@@ -146,3 +147,5 @@ export default function EventDetailPage() {
     </div>
   );
 }
+
+export default AuthGuard(EventDetailPage, ["EVENT_ORGANIZER"]);

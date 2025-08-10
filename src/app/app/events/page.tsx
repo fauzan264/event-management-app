@@ -9,8 +9,9 @@ import camelcaseKeys from "camelcase-keys";
 import Link from "next/link";
 import { deleteEvent } from "@/services/event";
 import Swal from "sweetalert2";
+import AuthGuard from "@/hoc/AuthGuard";
 
-export default function EventsPage() {
+function EventsPage() {
   const { token } = useAuthStore();
   const auth = useAuthStore();
   const [eventOrganizer, setEventOrganizer] = useState<IEventOrganizer | null>(
@@ -156,3 +157,5 @@ export default function EventsPage() {
     </div>
   );
 }
+
+export default AuthGuard(EventsPage, ["EVENT_ORGANIZER"]);

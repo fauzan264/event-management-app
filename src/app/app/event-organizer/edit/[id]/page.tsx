@@ -14,8 +14,9 @@ import { updateEventOrganizer } from "@/services/eventOrganizer";
 import { useRouter } from "next/navigation";
 import { AxiosError } from "axios";
 import Image from "next/image";
+import AuthGuard from "@/hoc/AuthGuard";
 
-export default function EditEventOrganizerPage() {
+function EditEventOrganizerPage() {
   const router = useRouter();
   const { token } = useAuthStore();
   const auth = useAuthStore();
@@ -359,3 +360,5 @@ export default function EditEventOrganizerPage() {
     </div>
   );
 }
+
+export default AuthGuard(EditEventOrganizerPage, ["EVENT_ORGANIZER"]);

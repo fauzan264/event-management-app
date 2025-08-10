@@ -15,8 +15,9 @@ import { createEventSchema } from "@/features/event/schemas/eventSchema";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import { AxiosError } from "axios";
+import AuthGuard from "@/hoc/AuthGuard";
 
-export default function CreateEventPage() {
+function CreateEventPage() {
   const router = useRouter();
   const { token } = useAuthStore();
 
@@ -429,3 +430,5 @@ export default function CreateEventPage() {
     </div>
   );
 }
+
+export default AuthGuard(CreateEventPage, ["EVENT_ORGANIZER"]);

@@ -1,7 +1,8 @@
 "use client";
+import AuthGuard from "@/hoc/AuthGuard";
 import useAuthStore from "@/store/useAuthStore";
 
-export default function AppPage() {
+function AppPage() {
   const auth = useAuthStore();
 
   return (
@@ -12,3 +13,5 @@ export default function AppPage() {
     </>
   );
 }
+
+export default AuthGuard(AppPage, ["EVENT_ORGANIZER"]);
