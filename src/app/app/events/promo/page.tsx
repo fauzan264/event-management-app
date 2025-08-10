@@ -1,10 +1,4 @@
-import { IEvent } from "@/features/event/types";
-import useAuthStore from "@/store/useAuthStore";
-import { useState } from "react";
-
 export default function CreatePromo() {
-    const { id:eventOrganizerId, token } = useAuthStore();
-    const [events, setEvents] = useState<IEvent[]>([]);
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 px-4">
