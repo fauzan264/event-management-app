@@ -3,10 +3,9 @@ import { IEvent } from "@/features/event/types";
 import { detailEvent } from "@/services/event";
 import camelcaseKeys from "camelcase-keys";
 import Image from "next/image";
-import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { formattingDateTime } from "../../../../../../utils/formattingDate";
+import { formattingDateTime } from "../../../../../utils/formattingDate";
 
 export default function EventDetailPage() {
   const { id } = useParams<{ id: string }>();
