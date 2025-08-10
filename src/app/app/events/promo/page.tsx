@@ -1,3 +1,4 @@
+"use client";
 import AuthGuard from "@/hoc/AuthGuard";
 
 function CreatePromo() {
