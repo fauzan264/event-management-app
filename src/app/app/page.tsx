@@ -14,7 +14,6 @@ import {
   Legend,
   BarElement,
 } from "chart.js";
-import axiosInstance from "@/lib/axiosInstances";
 import { IEventOrganizer } from "@/features/eventOrganizer/types";
 import { myEventOrganizer } from "@/services/user";
 import camelcaseKeys from "camelcase-keys";
