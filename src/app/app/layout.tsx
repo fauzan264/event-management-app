@@ -1,8 +1,6 @@
 "use client";
 import Sidebar from "@/components/layouts/Sidebar";
-import useAuthStore from "@/store/useAuthStore";
-import { useRouter } from "next/navigation";
-import React, { useEffect } from "react";
+import React from "react";
 
 interface AppLayoutProps {
   children: React.ReactNode;

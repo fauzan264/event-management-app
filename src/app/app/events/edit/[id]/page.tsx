@@ -11,12 +11,13 @@ import {
 } from "react-icons/md";
 import { IoMdPricetag } from "react-icons/io";
 import { FaTicketAlt } from "react-icons/fa";
-import { updateEventSchema } from "@/features/event/schemas/eventSchemas";
+import { updateEventSchema } from "@/features/event/schemas/eventSchema";
 import { useParams, useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import camelcaseKeys from "camelcase-keys";
+import Image from "next/image";
 
 export default function EditEventPage() {
   const router = useRouter();
@@ -36,6 +37,7 @@ export default function EditEventPage() {
   }, []);
 
   const onEditEvent = async ({
+    id,
     eventName,
     category,
     startDate,
@@ -50,6 +52,7 @@ export default function EditEventPage() {
     token,
   }: Pick<
     IEvent,
+    | "id"
     | "eventName"
     | "category"
     | "startDate"
@@ -119,10 +122,10 @@ export default function EditEventPage() {
       startDate: "",
       endDate: "",
       description: "",
-      availableTicket: "",
-      price: "",
+      availableTicket: 0,
+      price: 0,
       venueName: "",
-      venueCapacity: "",
+      venueCapacity: 0,
       address: "",
       image: [] as File[],
     },
@@ -141,6 +144,7 @@ export default function EditEventPage() {
       image,
     }) => {
       onEditEvent({
+        id,
         eventName,
         category,
         startDate,
@@ -170,10 +174,10 @@ export default function EditEventPage() {
           ? new Date(event.endDate).toISOString().slice(0, 16)
           : "",
         description: event.description || "",
-        availableTicket: event.availableTicket || "",
-        price: event.price || "",
+        availableTicket: event.availableTicket || 0,
+        price: event.price || 0,
         venueName: event.venue?.venueName || "",
-        venueCapacity: event.venue?.venueCapacity || "",
+        venueCapacity: event.venue?.venueCapacity || 0,
         address: event.venue?.address || "",
       });
     }
@@ -187,6 +191,16 @@ export default function EditEventPage() {
           <form onSubmit={formik.handleSubmit}>
             <div className="flex flex-wrap -mx-1">
               <div className="w-full">
+                {event?.imageUrl && (
+                  <figure className="w-40 h-40 block relative rounded">
+                    <Image
+                      src={event?.imageUrl}
+                      alt={`${event?.eventName} image`}
+                      fill
+                      className="object-cover"
+                    />
+                  </figure>
+                )}
                 <fieldset className="fieldset">
                   <legend className="fieldset-legend text-gray-200">
                     Image
@@ -195,7 +209,7 @@ export default function EditEventPage() {
                     id="image"
                     name="image"
                     type="file"
-                    className="file-input file-input-success"
+                    className="file-input file-input-success w-full md:w-1/3"
                     onChange={(event) => {
                       const files = Array.from(
                         event?.currentTarget.files || []

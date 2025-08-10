@@ -11,7 +11,7 @@ import {
 } from "react-icons/md";
 import { IoMdPricetag } from "react-icons/io";
 import { FaTicketAlt } from "react-icons/fa";
-import { createEventSchema } from "@/features/event/schemas/eventSchemas";
+import { createEventSchema } from "@/features/event/schemas/eventSchema";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import { AxiosError } from "axios";
@@ -95,10 +95,10 @@ export default function CreateEventPage() {
       startDate: "",
       endDate: "",
       description: "",
-      availableTicket: "",
-      price: "",
+      availableTicket: 0,
+      price: 0,
       venueName: "",
-      venueCapacity: "",
+      venueCapacity: 0,
       address: "",
       image: [] as File[],
     },

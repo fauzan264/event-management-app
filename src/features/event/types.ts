@@ -2,7 +2,7 @@ import { IEventOrganizer } from "../eventOrganizer/types";
 
 export interface IVenue {
   venueName: string;
-  venueCapacity: string;
+  venueCapacity: number;
   address: string;
 }
 
@@ -14,8 +14,8 @@ export interface IEvent {
   endDate: string;
   imageUrl: string;
   description: string;
-  availableTicket: string;
-  price: string;
+  availableTicket: number;
+  price: number;
   eventOrganizerId: string;
   venueId: string;
   createdAt: Date;

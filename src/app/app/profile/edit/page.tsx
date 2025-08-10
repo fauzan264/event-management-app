@@ -1,84 +1,74 @@
 "use client";
-import { updateEventOrganizerSchema } from "@/features/eventOrganizer/schemas/eventOrganizerSchema";
-import { useFormik } from "formik";
-import { MdEmail } from "react-icons/md";
-import { FaBuilding, FaGlobe, FaPhone } from "react-icons/fa";
-import { BiCreditCard } from "react-icons/bi";
+import { updateUserSchema } from "@/features/auth/schema/userSchema";
+import { IAuth } from "@/features/auth/types";
+import { myProfile, updateProfile } from "@/services/user";
 import useAuthStore from "@/store/useAuthStore";
-import { useEffect, useState } from "react";
-import { IEventOrganizer } from "@/features/eventOrganizer/types";
-import { myEventOrganizer } from "@/services/user";
-import camelcaseKeys from "camelcase-keys";
-import Swal from "sweetalert2";
-import { updateEventOrganizer } from "@/services/eventOrganizer";
-import { useRouter } from "next/navigation";
 import { AxiosError } from "axios";
+import camelcaseKeys from "camelcase-keys";
+import { useFormik } from "formik";
 import Image from "next/image";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { FaRegUser, FaRegAddressCard, FaPhone } from "react-icons/fa";
+import { MdEmail } from "react-icons/md";
+import { MdDateRange } from "react-icons/md";
+import Swal from "sweetalert2";
 
-export default function EditEventOrganizerPage() {
+export default function EditProfilePage() {
   const router = useRouter();
   const { token } = useAuthStore();
-  const auth = useAuthStore();
-  const [eventOrganizer, setEventOrganizer] = useState<IEventOrganizer | null>(
-    null
-  );
+  const [profile, setProfile] = useState<IAuth | null>(null);
 
-  const onGetDataEventOrganizer = async () => {
-    const res = await myEventOrganizer({ id: auth?.id, token });
+  const onGetProfile = async () => {
+    const res = await myProfile({ token });
 
-    setEventOrganizer(camelcaseKeys(res.data.data, { deep: true }));
+    setProfile(camelcaseKeys(res.data.data));
   };
 
   useEffect(() => {
-    if (auth?.id) onGetDataEventOrganizer();
-  }, [auth?.id]);
+    if (token) onGetProfile();
+  }, [token]);
 
-  const onEditEventOrganizer = async ({
+  const onEditProfile = async ({
     id,
-    companyName,
+    idCardNumber,
+    fullName,
+    dateOfBirth,
     email,
     phoneNumber,
-    address,
-    websiteUrl,
-    bankAccount,
-    bannerUrl,
+    profilePicture,
     token,
   }: Pick<
-    IEventOrganizer,
-    | "id"
-    | "companyName"
-    | "email"
-    | "phoneNumber"
-    | "address"
-    | "websiteUrl"
-    | "bankAccount"
+    IAuth,
+    "id" | "idCardNumber" | "fullName" | "dateOfBirth" | "email" | "phoneNumber"
   > & {
-    bannerUrl: File[];
+    profilePicture: File[];
     token: string;
   }) => {
+    if (!id) return;
+
     Swal.fire({
-      title: `Are you sure you want to edit your event organizer?`,
+      title: `Are you sure you want to edit your profile?`,
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       confirmButtonText: "Yes, edit it!",
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const res = await updateEventOrganizer({
+          const res = await updateProfile({
             id,
-            companyName,
+            idCardNumber,
+            fullName,
+            dateOfBirth,
             email,
             phoneNumber,
-            address,
-            websiteUrl,
-            bankAccount,
-            bannerUrl,
+            profilePicture,
             token,
           });
 
           Swal.fire(res.data.message, "", "success");
 
-          router.push("/app/event-organizer");
+          router.push("/app/profile");
         } catch (error: unknown) {
           if (error instanceof AxiosError) {
             const message =
@@ -102,67 +92,64 @@ export default function EditEventOrganizerPage() {
 
   const formik = useFormik({
     initialValues: {
-      companyName: "",
+      idCardNumber: "",
+      fullName: "",
+      dateOfBirth: "",
       email: "",
       phoneNumber: "",
-      address: "",
-      websiteUrl: "",
-      bankAccount: "",
-      bannerUrl: [] as File[],
+      profilePicture: [] as File[],
     },
-    validationSchema: updateEventOrganizerSchema,
+    validationSchema: updateUserSchema,
     onSubmit: ({
-      companyName,
+      idCardNumber,
+      fullName,
+      dateOfBirth,
       email,
       phoneNumber,
-      address,
-      websiteUrl,
-      bankAccount,
-      bannerUrl,
+      profilePicture,
     }) => {
-      if (!eventOrganizer) return;
-
-      onEditEventOrganizer({
-        id: eventOrganizer?.id,
-        companyName,
+      onEditProfile({
+        id: profile?.id ?? "",
+        idCardNumber,
+        fullName,
+        dateOfBirth,
         email,
         phoneNumber,
-        address,
-        websiteUrl,
-        bankAccount,
-        bannerUrl,
+        profilePicture,
         token,
       });
     },
   });
 
   useEffect(() => {
-    if (eventOrganizer) {
+    if (profile) {
       formik.setValues({
-        bannerUrl: [],
-        companyName: eventOrganizer.companyName || "",
-        email: eventOrganizer.email || "",
-        phoneNumber: eventOrganizer.phoneNumber || "",
-        address: eventOrganizer.address || "",
-        websiteUrl: eventOrganizer.websiteUrl || "",
-        bankAccount: eventOrganizer.bankAccount || "",
+        profilePicture: [],
+        idCardNumber: profile.idCardNumber || "",
+        fullName: profile.fullName || "",
+        dateOfBirth: profile.dateOfBirth || "",
+        email: profile.email || "",
+        phoneNumber: profile.phoneNumber || "",
       });
     }
-  }, [eventOrganizer]);
+  }, [profile]);
 
   return (
     <div className="mx-auto w-11/12 my-10">
-      <h1 className="text-2xl text-gray-200">Update My Event Organizer</h1>
+      <h1 className="text-2xl text-gray-200">Create Event</h1>
       <div className="card bg-gray-800 my-5">
         <div className="card-body">
+          <div className="card-title justify-center text-gray-200">
+            Edit Profile
+          </div>
           <form onSubmit={formik.handleSubmit}>
             <div className="flex flex-wrap -mx-1">
               <div className="w-full">
-                {eventOrganizer?.bannerUrl && (
+                {profile?.profilePicture && (
                   <figure className="w-40 h-40 block relative rounded">
                     <Image
-                      src={eventOrganizer?.bannerUrl}
-                      alt={`${eventOrganizer?.companyName} image`}
+                      src={profile?.profilePicture}
+                      alt={`${profile?.fullName} image`}
                       fill
                       className="object-cover"
                     />
@@ -173,50 +160,79 @@ export default function EditEventOrganizerPage() {
                     Image
                   </legend>
                   <input
-                    id="bannerUrl"
-                    name="bannerUrl"
+                    id="profilePicture"
+                    name="profilePicture"
                     type="file"
                     className="file-input file-input-success w-full md:w-1/3"
                     onChange={(event) => {
                       const files = Array.from(
                         event?.currentTarget.files || []
                       );
-                      formik.setFieldValue("bannerUrl", files);
+                      formik.setFieldValue("profilePicture", files);
                     }}
                     multiple
                   />
-                  {formik.errors.bannerUrl && formik.touched.bannerUrl && (
-                    <div className="feedback text-red-600">
-                      {formik?.touched?.bannerUrl &&
-                        formik?.errors?.bannerUrl && (
-                          <div>{formik?.errors.bannerUrl.toString()}</div>
-                        )}
-                    </div>
-                  )}
+                  {formik.errors.profilePicture &&
+                    formik.touched.profilePicture && (
+                      <div className="feedback text-red-600">
+                        {formik?.touched?.profilePicture &&
+                          formik?.errors?.profilePicture && (
+                            <div>
+                              {formik?.errors.profilePicture.toString()}
+                            </div>
+                          )}
+                      </div>
+                    )}
+                </fieldset>
+              </div>
+              <div className="w-full">
+                <fieldset className="fieldset">
+                  <legend className="fieldset-legend text-gray-200">
+                    Nomor Identitas
+                  </legend>
+                  <label
+                    htmlFor=""
+                    className="input input-accent validator w-full"
+                  >
+                    <FaRegAddressCard />
+                    <input
+                      type="text"
+                      name="idCardNumber"
+                      id="idCardNumber"
+                      onChange={formik.handleChange}
+                      value={formik.values.idCardNumber}
+                    />
+                  </label>
+                  {formik.errors.idCardNumber &&
+                    formik.touched.idCardNumber && (
+                      <div className="feedback text-red-600">
+                        {formik.errors.idCardNumber}
+                      </div>
+                    )}
                 </fieldset>
               </div>
 
               <div className="w-full md:w-1/2 px-1">
                 <fieldset className="fieldset">
                   <legend className="fieldset-legend text-gray-200">
-                    Company Name
+                    Nama Lengkap
                   </legend>
                   <label
                     htmlFor=""
                     className="input input-accent validator w-full"
                   >
-                    <FaBuilding />
+                    <FaRegUser />
                     <input
                       type="text"
-                      name="companyName"
-                      id="companyName"
+                      name="fullName"
+                      id="fullName"
                       onChange={formik.handleChange}
-                      value={formik.values.companyName}
+                      value={formik.values.fullName}
                     />
                   </label>
-                  {formik.errors.companyName && formik.touched.companyName && (
+                  {formik.errors.fullName && formik.touched.fullName && (
                     <div className="feedback text-red-600">
-                      {formik.errors.companyName}
+                      {formik.errors.fullName}
                     </div>
                   )}
                 </fieldset>
@@ -251,6 +267,32 @@ export default function EditEventOrganizerPage() {
               <div className="w-full md:w-1/2 px-1">
                 <fieldset className="fieldset">
                   <legend className="fieldset-legend text-gray-200">
+                    Tanggal Lahir
+                  </legend>
+                  <label
+                    htmlFor=""
+                    className="input input-accent validator w-full"
+                  >
+                    <MdDateRange />
+                    <input
+                      type="date"
+                      name="dateOfBirth"
+                      id="dateOfBirth"
+                      onChange={formik.handleChange}
+                      value={formik.values.dateOfBirth}
+                    />
+                  </label>
+                  {formik.errors.dateOfBirth && formik.touched.dateOfBirth && (
+                    <div className="feedback text-red-600">
+                      {formik.errors.dateOfBirth}
+                    </div>
+                  )}
+                </fieldset>
+              </div>
+
+              <div className="w-full md:w-1/2 px-1">
+                <fieldset className="fieldset">
+                  <legend className="fieldset-legend text-gray-200">
                     Phone Number
                   </legend>
                   <label
@@ -269,78 +311,6 @@ export default function EditEventOrganizerPage() {
                   {formik.errors.phoneNumber && formik.touched.phoneNumber && (
                     <div className="feedback text-red-600">
                       {formik.errors.phoneNumber}
-                    </div>
-                  )}
-                </fieldset>
-              </div>
-
-              <div className="w-full md:w-1/2 px-1">
-                <fieldset className="fieldset">
-                  <legend className="fieldset-legend text-gray-200">
-                    Website URL
-                  </legend>
-                  <label
-                    htmlFor=""
-                    className="input input-accent validator w-full"
-                  >
-                    <FaGlobe />
-                    <input
-                      type="text"
-                      name="websiteUrl"
-                      id="websiteUrl"
-                      onChange={formik.handleChange}
-                      value={formik.values.websiteUrl}
-                    />
-                  </label>
-                  {formik.errors.websiteUrl && formik.touched.websiteUrl && (
-                    <div className="feedback text-red-600">
-                      {formik.errors.websiteUrl}
-                    </div>
-                  )}
-                </fieldset>
-              </div>
-
-              <div className="w-full md:w-1/2 px-1">
-                <fieldset className="fieldset">
-                  <legend className="fieldset-legend text-gray-200">
-                    Bank Account
-                  </legend>
-                  <label
-                    htmlFor=""
-                    className="input input-accent validator w-full"
-                  >
-                    <BiCreditCard />
-                    <input
-                      type="text"
-                      name="bankAccount"
-                      id="bankAccount"
-                      onChange={formik.handleChange}
-                      value={formik.values.bankAccount}
-                    />
-                  </label>
-                  {formik.errors.bankAccount && formik.touched.bankAccount && (
-                    <div className="feedback text-red-600">
-                      {formik.errors.bankAccount}
-                    </div>
-                  )}
-                </fieldset>
-              </div>
-
-              <div className="w-full">
-                <fieldset className="fieldset">
-                  <legend className="fieldset-legend text-gray-200">
-                    Address
-                  </legend>
-                  <textarea
-                    className="textarea w-full"
-                    placeholder="Address"
-                    name="address"
-                    onChange={formik.handleChange}
-                    value={formik.values.address}
-                  />
-                  {formik.errors.address && formik.touched.address && (
-                    <div className="feedback text-red-600">
-                      {formik.values.address}
                     </div>
                   )}
                 </fieldset>

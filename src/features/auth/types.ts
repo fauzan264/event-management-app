@@ -6,6 +6,7 @@ export interface IAuth {
   email: string;
   password: string;
   phoneNumber: string;
+  profilePicture: string;
   referralCode: string;
   userRole: string;
   totalUserPoint: string;
