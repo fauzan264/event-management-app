@@ -7,6 +7,7 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import useAuthStore from "@/store/useAuthStore";
 import { PiSealCheckFill } from "react-icons/pi";
+import { MdCancel } from "react-icons/md";
 
 export default function UploadPayment() {
     const { token } = useAuthStore();
@@ -117,8 +118,9 @@ export default function UploadPayment() {
     if (!orders) {
         return <div>Data pesanan tidak ditemukan.</div>;
     }
+
+    // For order status : "Waiting for admin confirmation"
     if (orders.orderStatus === "Waiting for Admin Confirmation") {
-        // Bisa redirect, atau tampilkan pesan lain, atau kosongkan halaman
         return (
             <div className="flex flex-col items-center justify-center  h-screen p-10">
                 <div className="flex flex-col items-center justify-center w-100 gap-10">
@@ -134,6 +136,66 @@ export default function UploadPayment() {
                 </div>
             </div>
         );
+        
+    }
+
+    // For order status : "rejected"
+    if (orders.orderStatus === "Rejected") {
+        return (
+            <div className="flex flex-col items-center justify-center  h-screen p-10">
+                <div className="flex flex-col items-center justify-center w-100 gap-10">
+                    <h2 className="text-center text-white font-bold text-xl">
+                        We are sorry for rejecting your order !
+                    </h2>
+                    <span>
+                        <MdCancel size={100} className="text-green-500" />
+                    </span>
+                    <p className="text-white">
+                        Your payment proof is invalid. We have not received any payment.
+                    </p>
+                </div>
+            </div>
+        );
+        
+    }
+
+    // For order status : "Cancel"
+    if (orders.orderStatus === "Cancel") {
+        return (
+            <div className="flex flex-col items-center justify-center  h-screen p-10">
+                <div className="flex flex-col items-center justify-center w-100 gap-10">
+                    <h2 className="text-center text-white font-bold text-xl">
+                        We are sorry! Your order has been canceled by our system
+                    </h2>
+                    <span>
+                        <MdCancel size={100} className="text-green-500" />
+                    </span>
+                    <p className="text-white">
+                        There is no confirmation from the Event Organizer due to your order. Contact the promotor for refund
+                    </p>
+                </div>
+            </div>
+        );
+        
+    }
+
+    if (orders.orderStatus === "Done") {
+        return (
+            <div className="flex flex-col items-center justify-center  h-screen p-10">
+                <div className="flex flex-col items-center justify-center w-100 gap-10">
+                    <h2 className="text-center text-white font-bold text-xl">
+                       Congratulation! You are registered. 
+                    </h2>
+                    <span>
+                        <PiSealCheckFill size={100} className="text-green-500" />
+                    </span>
+                    <p className="text-white">
+                        Your payment has been validated by the admin. Dont miss your event schedule!
+                    </p>
+                </div>
+            </div>
+        );
+        
     }
 
     return (
