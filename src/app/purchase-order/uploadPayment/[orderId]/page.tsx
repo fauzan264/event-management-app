@@ -278,26 +278,23 @@ export default function UploadPayment() {
                                 your order.
                             </p>
                             {/* Form upload payment proof */}
-                            <form onSubmit={OnhandleSubmit} className="mt-6">
-                                <input
-                                    type="file"
-                                    className="file-input file-input-secondary"
-                                    onChange={handleFileChange}
-                                />
-                                <button
-                                    type="submit"
-                                    className="btn btn-primary mt-3"
+                            {orders.orderStatus === "Waiting for payment" && (
+                                <form
+                                    onSubmit={OnhandleSubmit}
+                                    className="mt-6"
                                 >
-                                    Finish Your Payment
-                                </button>
-                            </form>
-                            {orders.orderStatus ===
-                                "Waiting for Admin Confirmation" && (
-                                <div className="text-center p-5 bg-green-100 rounded">
-                                    <p className="font-bold text-green-700">
-                                        Bukti pembayaran Anda telah diterima.
-                                    </p>
-                                </div>
+                                    <input
+                                        type="file"
+                                        className="file-input file-input-secondary"
+                                        onChange={handleFileChange}
+                                    />
+                                    <button
+                                        type="submit"
+                                        className="btn btn-primary mt-3"
+                                    >
+                                        Submit Payment
+                                    </button>
+                                </form>
                             )}
                         </div>
                     </div>
