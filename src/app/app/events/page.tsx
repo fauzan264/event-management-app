@@ -10,11 +10,9 @@ import Link from "next/link";
 import { deleteEvent } from "@/services/event";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
-import snakecaseKeys from "snakecase-keys";
 
 export default function EventsPage() {
   const { token } = useAuthStore();
-  const router = useRouter();
   const auth = useAuthStore();
   const [eventOrganizer, setEventOrganizer] = useState<IEventOrganizer | null>(
     null
