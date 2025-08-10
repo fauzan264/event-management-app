@@ -3,15 +3,14 @@
 import useAuthStore from "@/store/useAuthStore";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { FaPlus, FaSearch } from "react-icons/fa";
+import { useState } from "react";
+import { FaSearch } from "react-icons/fa";
 import { HiOutlineMenuAlt1 } from "react-icons/hi";
 import { FaUserCircle } from "react-icons/fa";
 
 export default function Navbar() {
   const { logout } = useAuthStore();
   const auth = useAuthStore();
-  const [isScrolled, setIscrolled] = useState(false);
   const [activeHref, setActiveHref] = useState("");
   const pathname = usePathname();
   const router = useRouter();
@@ -24,15 +23,6 @@ export default function Navbar() {
     logout();
     router.push("/login");
   };
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIscrolled(window.scrollY > 50);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   const nav_items = [
     { href: "/", label: "Home" },
