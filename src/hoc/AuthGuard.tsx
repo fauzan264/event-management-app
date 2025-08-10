@@ -1,9 +1,9 @@
 "use client";
 import useAuthStore from "@/store/useAuthStore";
 import { useRouter } from "next/navigation";
-import { ComponentType, JSX, useEffect, useState } from "react";
+import { ComponentType, useEffect, useState } from "react";
 
-function AuthGuard<P extends JSX.IntrinsicAttributes>(
+function AuthGuard<P extends object>(
   WrappedComponent: ComponentType<P>,
   allowedRoles: string[]
 ) {
