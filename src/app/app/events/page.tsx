@@ -9,7 +9,6 @@ import camelcaseKeys from "camelcase-keys";
 import Link from "next/link";
 import { deleteEvent } from "@/services/event";
 import Swal from "sweetalert2";
-import { useRouter } from "next/navigation";
 
 export default function EventsPage() {
   const { token } = useAuthStore();
