@@ -154,7 +154,6 @@ export default function CreateEventPage() {
                       const files = Array.from(
                         event?.currentTarget.files || []
                       );
-                      console.log(files);
                       formik.setFieldValue("image", files);
                     }}
                     multiple
