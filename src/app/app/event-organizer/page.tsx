@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { IEventOrganizer } from "@/features/eventOrganizer/types";
 import camelcaseKeys from "camelcase-keys";
 import Image from "next/image";
-import { formattingDateTime } from "../../../../utils/formattingDate";
+import { formattingDateTime } from "../../../utils/formattingDate";
 import Link from "next/link";
 
 export default function EventOrganizerPage() {
