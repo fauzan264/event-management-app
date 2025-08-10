@@ -1,5 +1,5 @@
 "use client";
-import { createEvent } from "@/services/event";
+import { createEvent, updateEvent } from "@/services/event";
 import useAuthStore from "@/store/useAuthStore";
 import { IEvent, IVenue } from "@/features/event/types";
 import { useFormik } from "formik";
@@ -11,10 +11,17 @@ import {
 } from "react-icons/md";
 import { IoMdPricetag } from "react-icons/io";
 import { FaTicketAlt } from "react-icons/fa";
+import { updateEventSchema } from "@/features/event/schemas/eventSchemas";
+import { useParams, useRouter } from "next/navigation";
+import Swal from "sweetalert2";
+import { AxiosError } from "axios";
 
 export default function EditEventPage() {
+  const router = useRouter();
   const { token } = useAuthStore();
-  const onCreateEvent = async ({
+  const { id } = useParams<{ id: string }>();
+
+  const onEditEvent = async ({
     eventName,
     category,
     startDate,
@@ -38,25 +45,57 @@ export default function EditEventPage() {
     | "price"
   > &
     Pick<IVenue, "venueName" | "venueCapacity" | "address"> & {
-      image: string;
+      image: File[];
       token: string;
     }) => {
     try {
-      const res = await createEvent({
-        eventName,
-        category,
-        startDate,
-        endDate,
-        description,
-        availableTicket,
-        price,
-        venueName,
-        venueCapacity,
-        address,
-        image,
-        token,
+      if (!id) return;
+
+      Swal.fire({
+        title: `Are you sure you want to edit this event?`,
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "Yes, edit it!",
+      }).then(async (result) => {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+          const res = await updateEvent({
+            id,
+            eventName,
+            category,
+            startDate,
+            endDate,
+            description,
+            availableTicket,
+            price,
+            venueName,
+            venueCapacity,
+            address,
+            image,
+            token,
+          });
+
+          Swal.fire(res.data.message, "", "success");
+
+          router.push("/app/events");
+        }
       });
-    } catch (error: unknown) {}
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        const message = error.response?.data.message || "Something went wrong!";
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: message,
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Something went wrong!",
+        });
+      }
+    }
   };
 
   const formik = useFormik({
@@ -71,9 +110,9 @@ export default function EditEventPage() {
       venueName: "",
       venueCapacity: "",
       address: "",
-      image: "",
+      image: [] as File[],
     },
-    // validationSchema: registerSchema,
+    validationSchema: updateEventSchema,
     onSubmit: ({
       eventName,
       category,
@@ -87,7 +126,7 @@ export default function EditEventPage() {
       address,
       image,
     }) => {
-      onCreateEvent({
+      onEditEvent({
         eventName,
         category,
         startDate,
@@ -111,6 +150,34 @@ export default function EditEventPage() {
         <div className="card-body">
           <form onSubmit={formik.handleSubmit}>
             <div className="flex flex-wrap -mx-1">
+              <div className="w-full">
+                <fieldset className="fieldset">
+                  <legend className="fieldset-legend text-gray-200">
+                    Image
+                  </legend>
+                  <input
+                    id="image"
+                    name="image"
+                    type="file"
+                    className="file-input file-input-success"
+                    onChange={(event) => {
+                      const files = Array.from(
+                        event?.currentTarget.files || []
+                      );
+                      console.log(files);
+                      formik.setFieldValue("image", files);
+                    }}
+                    multiple
+                  />
+                  {formik.errors.image && formik.touched.image && (
+                    <div className="feedback text-red-600">
+                      {formik?.touched?.image && formik?.errors?.image && (
+                        <div>{formik?.errors.image.toString()}</div>
+                      )}
+                    </div>
+                  )}
+                </fieldset>
+              </div>
               <div className="w-full md:w-1/2 px-1">
                 <fieldset className="fieldset">
                   <legend className="fieldset-legend text-gray-200">
@@ -136,7 +203,6 @@ export default function EditEventPage() {
                   )}
                 </fieldset>
               </div>
-
               <div className="w-full md:w-1/2 px-1">
                 <fieldset className="fieldset">
                   <legend className="fieldset-legend text-gray-200">
@@ -172,7 +238,7 @@ export default function EditEventPage() {
                   >
                     <MdDateRange />
                     <input
-                      type="date"
+                      type="datetime-local"
                       name="startDate"
                       id="startDate"
                       onChange={formik.handleChange}
@@ -198,7 +264,7 @@ export default function EditEventPage() {
                   >
                     <MdDateRange />
                     <input
-                      type="date"
+                      type="datetime-local"
                       name="endDate"
                       id="endDate"
                       onChange={formik.handleChange}
@@ -225,7 +291,7 @@ export default function EditEventPage() {
                     name="description"
                     onChange={formik.handleChange}
                     value={formik.values.description}
-                  ></textarea>
+                  />
                   {formik.errors.description && formik.touched.description && (
                     <div className="feedback text-red-600">
                       {formik.errors.description}
@@ -352,7 +418,7 @@ export default function EditEventPage() {
                     name="address"
                     onChange={formik.handleChange}
                     value={formik.values.address}
-                  ></textarea>
+                  />
                   {formik.errors.address && formik.touched.address && (
                     <div className="feedback text-red-600">
                       {formik.errors.address}

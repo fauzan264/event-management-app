@@ -29,30 +29,29 @@ export const createEvent = ({
   | "price"
 > &
   Pick<IVenue, "venueName" | "venueCapacity" | "address"> & {
-    image: string;
+    image: File[];
     token: string;
   }) => {
-  return axiosInstance.post(
-    "/events",
-    {
-      eventName,
-      category,
-      startDate,
-      endDate,
-      description,
-      availableTicket,
-      price,
-      venueName,
-      venueCapacity,
-      address,
-      image,
+  const formData = new FormData();
+  formData.append("event_name", eventName);
+  formData.append("category", category);
+  formData.append("start_date", startDate);
+  formData.append("end_date", endDate);
+  formData.append("description", description);
+  formData.append("available_ticket", availableTicket);
+  formData.append("price", price);
+  formData.append("venue_name", venueName);
+  formData.append("venue_capacity", venueCapacity);
+  formData.append("address", address);
+  image.forEach((imageItem: any) => {
+    formData.append("image", imageItem);
+  });
+
+  return axiosInstance.post("/events", formData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
     },
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
+  });
 };
 
 export const updateEvent = ({
@@ -81,30 +80,29 @@ export const updateEvent = ({
   | "price"
 > &
   Pick<IVenue, "venueName" | "venueCapacity" | "address"> & {
-    image: string;
+    image: File[];
     token: string;
   }) => {
-  return axiosInstance.put(
-    `/events/${id}`,
-    {
-      eventName,
-      category,
-      startDate,
-      endDate,
-      description,
-      availableTicket,
-      price,
-      venueName,
-      venueCapacity,
-      address,
-      image,
+  const formData = new FormData();
+  formData.append("event_name", eventName);
+  formData.append("category", category);
+  formData.append("start_date", startDate);
+  formData.append("end_date", endDate);
+  formData.append("description", description);
+  formData.append("available_ticket", availableTicket);
+  formData.append("price", price);
+  formData.append("venue_name", venueName);
+  formData.append("venue_capacity", venueCapacity);
+  formData.append("address", address);
+  image.forEach((imageItem: any) => {
+    formData.append("image", imageItem);
+  });
+
+  return axiosInstance.put(`/events/${id}`, formData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
     },
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
+  });
 };
 
 export const deleteEvent = ({
