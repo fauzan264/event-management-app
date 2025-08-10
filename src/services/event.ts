@@ -38,12 +38,12 @@ export const createEvent = ({
   formData.append("start_date", startDate);
   formData.append("end_date", endDate);
   formData.append("description", description);
-  formData.append("available_ticket", availableTicket);
-  formData.append("price", price);
+  formData.append("available_ticket", String(availableTicket));
+  formData.append("price", String(price));
   formData.append("venue_name", venueName);
-  formData.append("venue_capacity", venueCapacity);
+  formData.append("venue_capacity", String(venueCapacity));
   formData.append("address", address);
-  image.forEach((imageItem: File) => {
+  (image as File[]).forEach((imageItem) => {
     formData.append("image", imageItem);
   });
 
@@ -89,12 +89,12 @@ export const updateEvent = ({
   formData.append("start_date", startDate);
   formData.append("end_date", endDate);
   formData.append("description", description);
-  formData.append("available_ticket", availableTicket);
-  formData.append("price", price);
+  formData.append("available_ticket", String(availableTicket));
+  formData.append("price", String(price));
   formData.append("venue_name", venueName);
-  formData.append("venue_capacity", venueCapacity);
+  formData.append("venue_capacity", String(venueCapacity));
   formData.append("address", address);
-  image.forEach((imageItem: File) => {
+  (image as File[]).forEach((imageItem) => {
     formData.append("image", imageItem);
   });
 
