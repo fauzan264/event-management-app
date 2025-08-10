@@ -1,5 +1,5 @@
 "use client";
-import { formatPrice } from "@/app/utils/priceFormatter";
+import { formatPrice } from "@/utils/priceFormatter";
 import { ITransaction } from "@/components/type";
 import useAuthStore from "@/store/useAuthStore";
 import axios from "axios";
