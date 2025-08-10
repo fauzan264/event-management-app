@@ -1,6 +1,7 @@
 "use client";
 import { updateUserSchema } from "@/features/auth/schema/userSchema";
 import { IAuth } from "@/features/auth/types";
+import AuthGuard from "@/hoc/AuthGuard";
 import { myProfile, updateProfile } from "@/services/user";
 import useAuthStore from "@/store/useAuthStore";
 import { AxiosError } from "axios";
@@ -14,7 +15,7 @@ import { MdEmail } from "react-icons/md";
 import { MdDateRange } from "react-icons/md";
 import Swal from "sweetalert2";
 
-export default function EditProfilePage() {
+function EditProfilePage() {
   const router = useRouter();
   const { token } = useAuthStore();
   const [profile, setProfile] = useState<IAuth | null>(null);
@@ -329,3 +330,5 @@ export default function EditProfilePage() {
     </div>
   );
 }
+
+export default AuthGuard(EditProfilePage, ["EVENT_ORGANIZER", "CUSTOMER"]);

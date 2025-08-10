@@ -1,5 +1,6 @@
 "use client";
 import { changePasswordSchema } from "@/features/auth/change-password/schemas/changePasswordSchema";
+import AuthGuard from "@/hoc/AuthGuard";
 import { changePassword } from "@/services/auth";
 import useAuthStore from "@/store/useAuthStore";
 import { AxiosError } from "axios";
@@ -8,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { TbLockPassword } from "react-icons/tb";
 import Swal from "sweetalert2";
 
-export default function ChangePasswordPage() {
+function ChangePasswordPage() {
   const router = useRouter();
   const { token } = useAuthStore();
 
@@ -151,3 +152,5 @@ export default function ChangePasswordPage() {
     </div>
   );
 }
+
+export default AuthGuard(ChangePasswordPage, ["EVENT_ORGANIZER", "CUSTOMER"]);

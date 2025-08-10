@@ -18,8 +18,9 @@ import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import camelcaseKeys from "camelcase-keys";
 import Image from "next/image";
+import AuthGuard from "@/hoc/AuthGuard";
 
-export default function EditEventPage() {
+function EditEventPage() {
   const router = useRouter();
   const { token } = useAuthStore();
   const { id } = useParams<{ id: string }>();
@@ -497,3 +498,5 @@ export default function EditEventPage() {
     </div>
   );
 }
+
+export default AuthGuard(EditEventPage, ["EVENT_ORGANIZER"]);

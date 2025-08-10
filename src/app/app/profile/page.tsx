@@ -7,8 +7,9 @@ import Image from "next/image";
 import { formattingDateTime } from "../../../utils/formattingDate";
 import Link from "next/link";
 import { IAuth } from "@/features/auth/types";
+import AuthGuard from "@/hoc/AuthGuard";
 
-export default function UserProfilePage() {
+function UserProfilePage() {
   const { token } = useAuthStore();
   const [profile, setProfile] = useState<IAuth | null>(null);
 
@@ -142,3 +143,5 @@ export default function UserProfilePage() {
     </>
   );
 }
+
+export default AuthGuard(UserProfilePage, ["EVENT_ORGANIZER", "CUSTOMER"]);

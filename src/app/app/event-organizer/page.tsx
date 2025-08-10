@@ -7,8 +7,9 @@ import camelcaseKeys from "camelcase-keys";
 import Image from "next/image";
 import { formattingDateTime } from "../../../utils/formattingDate";
 import Link from "next/link";
+import AuthGuard from "@/hoc/AuthGuard";
 
-export default function EventOrganizerPage() {
+function EventOrganizerPage() {
   const { token } = useAuthStore();
   const auth = useAuthStore();
   const [eventOrganizer, setEventOrganizer] = useState<IEventOrganizer | null>(
@@ -121,3 +122,5 @@ export default function EventOrganizerPage() {
     </>
   );
 }
+
+export default AuthGuard(EventOrganizerPage, ["EVENT_ORGANIZER"]);
