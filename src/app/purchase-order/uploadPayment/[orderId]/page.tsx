@@ -28,7 +28,12 @@ export default function UploadPayment() {
 
             try {
                 const res = await axios.get(
-                    `${process.env.NEXT_PUBLIC_API_URL}/api/purchase-order/${orderId}`
+                    `${process.env.NEXT_PUBLIC_API_URL}/api/purchase-order/${orderId}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
                 );
                 setOrder(res.data.data);
             } catch (err) {
@@ -128,7 +133,10 @@ export default function UploadPayment() {
                         Congratulation ! We have receive your payment
                     </h2>
                     <span>
-                        <PiSealCheckFill size={100} className="text-green-500" />
+                        <PiSealCheckFill
+                            size={100}
+                            className="text-green-500"
+                        />
                     </span>
                     <p className="text-white">
                         Please await further confirmation sent to your email.
@@ -136,7 +144,6 @@ export default function UploadPayment() {
                 </div>
             </div>
         );
-        
     }
 
     // For order status : "rejected"
@@ -151,12 +158,12 @@ export default function UploadPayment() {
                         <MdCancel size={100} className="text-green-500" />
                     </span>
                     <p className="text-white">
-                        Your payment proof is invalid. We have not received any payment.
+                        Your payment proof is invalid. We have not received any
+                        payment.
                     </p>
                 </div>
             </div>
         );
-        
     }
 
     // For order status : "Cancel"
@@ -171,12 +178,12 @@ export default function UploadPayment() {
                         <MdCancel size={100} className="text-green-500" />
                     </span>
                     <p className="text-white">
-                        There is no confirmation from the Event Organizer due to your order. Contact the promotor for refund
+                        There is no confirmation from the Event Organizer due to
+                        your order. Contact the promotor for refund
                     </p>
                 </div>
             </div>
         );
-        
     }
 
     if (orders.orderStatus === "Done") {
@@ -184,18 +191,21 @@ export default function UploadPayment() {
             <div className="flex flex-col items-center justify-center  h-screen p-10">
                 <div className="flex flex-col items-center justify-center w-100 gap-10">
                     <h2 className="text-center text-white font-bold text-xl">
-                       Congratulation! You are registered. 
+                        Congratulation! You are registered.
                     </h2>
                     <span>
-                        <PiSealCheckFill size={100} className="text-green-500" />
+                        <PiSealCheckFill
+                            size={100}
+                            className="text-green-500"
+                        />
                     </span>
                     <p className="text-white">
-                        Your payment has been validated by the admin. Dont miss your event schedule!
+                        Your payment has been validated by the admin. Dont miss
+                        your event schedule!
                     </p>
                 </div>
             </div>
         );
-        
     }
 
     return (

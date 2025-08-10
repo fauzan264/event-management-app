@@ -31,3 +31,15 @@ export interface IPurchaseOrder {
   expiredAt: string; 
   createdAt: string; 
 }
+
+export interface ITransaction {
+  id: string;
+  imageUrl: string;
+  eventName: string;
+  startDate: string; // bisa pakai Date kalau mau parsing langsung
+  endDate: string;
+  quantity: number;
+  finalPrice: number;
+  orderStatus: string;
+  createdAt: string;
+}
