@@ -9,6 +9,8 @@ import { formatPrice } from "@/app/utils/priceFormatter";
 import { FaMoneyBillTransfer } from "react-icons/fa6";
 import { useFormik } from "formik";
 import useAuthStore from "@/store/useAuthStore";
+import { useRouter } from "next/navigation";
+
 
 interface IUserPoint {
     id: string;
@@ -16,6 +18,9 @@ interface IUserPoint {
 }
 
 export default function PurchaseOrder() {
+
+    const router = useRouter();
+
     const { token } = useAuthStore();
     const auth = useAuthStore();
     const { eventId } = useParams();
@@ -53,8 +58,11 @@ export default function PurchaseOrder() {
                     }
                 );
 
+                const orderId = res.data.data.id;
+
                 console.log("Order berhasil:", res.data);
                 alert("Order berhasil dibuat!");
+                router.push(`/purchase-order/uploadPayment/${orderId}`);
             } catch (error) {
                 console.error("Gagal membuat order:", error);
                 alert("Terjadi kesalahan saat membuat order.");
@@ -164,7 +172,9 @@ export default function PurchaseOrder() {
                                     name="fullName"
                                     value={formik.values.fullName}
                                     onChange={formik.handleChange}
-                                    className="border px-3 py-2 w-full rounded"
+                                    className="border px-3 py-2 w-full rounded bg-gray-100 text-gray-500 cursor-not-allowed"
+                                    readOnly
+                                    
                                 />
                             </div>
 
@@ -177,8 +187,11 @@ export default function PurchaseOrder() {
                                     name="email"
                                     value={formik.values.email}
                                     onChange={formik.handleChange}
-                                    className="border px-3 py-2 w-full rounded"
+                                    className="border px-3 py-2 w-full rounded bg-gray-100 text-gray-500 cursor-not-allowed"
+                                    readOnly
+
                                 />
+                                
                             </div>
 
                             <select
