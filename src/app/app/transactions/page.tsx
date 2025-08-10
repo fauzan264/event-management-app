@@ -37,43 +37,45 @@ export default function TransactionPage() {
     }, [token, userId]);
 
     return (
-            <div className="mx-auto w-11/12 my-10 p-4">
-                <h1 className="text-gray-200 text-xl font-bold mb-4">
-                    Transactions
-                </h1>
-                <div className="space-y-4">
-                    {transactions.map((trx) => (
-                        <div
-                            key={trx.id}
-                            onClick={() =>
-                            router.push(`/purchase-order/uploadPayment/${trx.id}`)}
-                            className="w-full bg-white shadow rounded-lg p-4 border border-gray-200"
-                        >
-                            <figure>
-                                <Image
-                                    src={trx.imageUrl}
-                                    alt={`${trx.eventName} image`}
-                                    fill
-                                    className="object-cover"
-                                />
-                            </figure>
-                            <div>
-                                <h2 className="text-lg font-semibold">
-                                    {trx.eventName}
-                                </h2>
-                                <p className="text-sm text-gray-500">
-                                    Order ID: {trx.id}
-                                </p>
-                                <p className="text-sm">
-                                    Amount: Rp {formatPrice(trx.finalPrice)}
-                                </p>
-                                <p className="text-sm">
-                                    Status: {trx.orderStatus}
-                                </p>
-                            </div>
+        <div className="mx-auto w-11/12 my-10 p-4">
+            <h1 className="text-gray-200 text-xl font-bold mb-4">
+                Transactions
+            </h1>
+            <div className="space-y-4">
+                {transactions.map((trx) => (
+                    <div
+                        key={trx.id}
+                        onClick={() =>
+                            router.push(
+                                `/purchase-order/uploadPayment/${trx.id}`
+                            )
+                        }
+                        className="flex flex-row w-full bg-white shadow rounded-lg p-4 border border-gray-200 gap-10"
+                    >
+                        <figure className="relative w-48 h-30 overflow-hidden rounded-md">
+                            <Image
+                                src={trx.imageUrl}
+                                alt={`${trx.eventName} image`}
+                                fill
+                                className="object-cover"
+                            />
+                        </figure>
+                        <div>
+                            <h2 className="text-lg font-semibold">
+                                {trx.eventName}
+                            </h2>
+                            <p className="text-sm text-gray-500">
+                                Order ID: {trx.id}
+                            </p>
+                            <span className="text-sm text-black">{trx.quantity} Pax</span>
+                            <p className="text-sm">
+                                Rp {formatPrice(trx.finalPrice)}
+                            </p>
+                            <p className="font-bold bg-gray-200 text-sm inline-block px-2 py-1 rounded"> {trx.orderStatus}</p>
                         </div>
-                    ))}
-                </div>
+                    </div>
+                ))}
             </div>
+        </div>
     );
 }

@@ -43,7 +43,7 @@ export const createEvent = ({
   formData.append("venue_name", venueName);
   formData.append("venue_capacity", venueCapacity);
   formData.append("address", address);
-  image.forEach((imageItem: any) => {
+  image.forEach((imageItem: File) => {
     formData.append("image", imageItem);
   });
 
@@ -94,7 +94,7 @@ export const updateEvent = ({
   formData.append("venue_name", venueName);
   formData.append("venue_capacity", venueCapacity);
   formData.append("address", address);
-  image.forEach((imageItem: any) => {
+  image.forEach((imageItem: File) => {
     formData.append("image", imageItem);
   });
 
