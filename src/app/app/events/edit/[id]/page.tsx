@@ -1,5 +1,5 @@
 "use client";
-import { createEvent, updateEvent } from "@/services/event";
+import { detailEvent, updateEvent } from "@/services/event";
 import useAuthStore from "@/store/useAuthStore";
 import { IEvent, IVenue } from "@/features/event/types";
 import { useFormik } from "formik";
@@ -15,11 +15,25 @@ import { updateEventSchema } from "@/features/event/schemas/eventSchemas";
 import { useParams, useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 import { AxiosError } from "axios";
+import { useEffect, useState } from "react";
+import camelcaseKeys from "camelcase-keys";
 
 export default function EditEventPage() {
   const router = useRouter();
   const { token } = useAuthStore();
   const { id } = useParams<{ id: string }>();
+  const [event, setEvent] = useState<IEvent | null>(null);
+
+  const getDetailEvent = async () => {
+    if (!id) return;
+    const res = await detailEvent({ id });
+
+    setEvent(camelcaseKeys(res?.data?.data, { deep: true }) as IEvent);
+  };
+
+  useEffect(() => {
+    getDetailEvent();
+  }, []);
 
   const onEditEvent = async ({
     eventName,
@@ -48,17 +62,16 @@ export default function EditEventPage() {
       image: File[];
       token: string;
     }) => {
-    try {
-      if (!id) return;
+    if (!id) return;
 
-      Swal.fire({
-        title: `Are you sure you want to edit this event?`,
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        confirmButtonText: "Yes, edit it!",
-      }).then(async (result) => {
-        /* Read more about isConfirmed, isDenied below */
-        if (result.isConfirmed) {
+    Swal.fire({
+      title: `Are you sure you want to edit this event?`,
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      confirmButtonText: "Yes, edit it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
           const res = await updateEvent({
             id,
             eventName,
@@ -78,24 +91,25 @@ export default function EditEventPage() {
           Swal.fire(res.data.message, "", "success");
 
           router.push("/app/events");
+        } catch (error: unknown) {
+          if (error instanceof AxiosError) {
+            const message =
+              error.response?.data.message || "Something went wrong!";
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: message,
+            });
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: "Something went wrong!",
+            });
+          }
         }
-      });
-    } catch (error: unknown) {
-      if (error instanceof AxiosError) {
-        const message = error.response?.data.message || "Something went wrong!";
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: message,
-        });
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: "Something went wrong!",
-        });
       }
-    }
+    });
   };
 
   const formik = useFormik({
@@ -143,6 +157,28 @@ export default function EditEventPage() {
     },
   });
 
+  useEffect(() => {
+    if (event) {
+      formik.setValues({
+        image: [],
+        eventName: event.eventName || "",
+        category: event.category || "",
+        startDate: event.startDate
+          ? new Date(event.startDate).toISOString().slice(0, 16)
+          : "",
+        endDate: event.endDate
+          ? new Date(event.endDate).toISOString().slice(0, 16)
+          : "",
+        description: event.description || "",
+        availableTicket: event.availableTicket || "",
+        price: event.price || "",
+        venueName: event.venue?.venueName || "",
+        venueCapacity: event.venue?.venueCapacity || "",
+        address: event.venue?.address || "",
+      });
+    }
+  }, [event]);
+
   return (
     <div className="mx-auto w-11/12 my-10">
       <h1 className="text-2xl text-gray-200">Create Event</h1>
@@ -164,7 +200,6 @@ export default function EditEventPage() {
                       const files = Array.from(
                         event?.currentTarget.files || []
                       );
-                      console.log(files);
                       formik.setFieldValue("image", files);
                     }}
                     multiple
@@ -242,7 +277,11 @@ export default function EditEventPage() {
                       name="startDate"
                       id="startDate"
                       onChange={formik.handleChange}
-                      value={formik.values.startDate}
+                      value={
+                        event?.startDate
+                          ? new Date(event.startDate).toISOString().slice(0, 16)
+                          : formik.values.startDate
+                      }
                     />
                   </label>
                   {formik.errors.startDate && formik.touched.startDate && (
@@ -268,7 +307,11 @@ export default function EditEventPage() {
                       name="endDate"
                       id="endDate"
                       onChange={formik.handleChange}
-                      value={formik.values.endDate}
+                      value={
+                        event?.endDate
+                          ? new Date(event.endDate).toISOString().slice(0, 16)
+                          : formik.values.endDate
+                      }
                     />
                   </label>
                   {formik.errors.endDate && formik.touched.endDate && (
@@ -394,13 +437,13 @@ export default function EditEventPage() {
                       name="venueCapacity"
                       id="venueCapacity"
                       onChange={formik.handleChange}
-                      value={formik.values.venueCapacity}
+                      value={event?.venue.venueCapacity}
                     />
                   </label>
                   {formik.errors.venueCapacity &&
                     formik.touched.venueCapacity && (
                       <div className="feedback text-red-600">
-                        {formik.errors.venueCapacity}
+                        {formik.values.venueCapacity}
                       </div>
                     )}
                 </fieldset>
@@ -417,11 +460,11 @@ export default function EditEventPage() {
                     placeholder="Address"
                     name="address"
                     onChange={formik.handleChange}
-                    value={formik.values.address}
+                    value={event?.venue.address}
                   />
                   {formik.errors.address && formik.touched.address && (
                     <div className="feedback text-red-600">
-                      {formik.errors.address}
+                      {formik.values.address}
                     </div>
                   )}
                 </fieldset>
