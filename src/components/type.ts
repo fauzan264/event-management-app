@@ -45,6 +45,7 @@ export interface ITransaction {
 }
 
 export interface IPromo {
+  id: string;
   discountValue: number | '';
   description: string;
   availableCoupon: number | '';
