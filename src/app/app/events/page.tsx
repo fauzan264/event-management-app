@@ -96,6 +96,12 @@ function EventsPage() {
       <div className="flex">
         <h1 className="text-2xl text-gray-200">List My Event</h1>
         <Link
+          href="/app/events/promo"
+          className="btn btn-sm bg-blue-700 ml-auto text-gray-200 hover:bg-blue-800 active:bg-blue-800 transition ease-in-out duration-300 focus:outline-none focus:ring-0 border-0"
+        >
+          Tambah Promo
+        </Link>
+        <Link
           href="/app/events/create"
           className="btn btn-sm bg-blue-700 ml-auto text-gray-200 hover:bg-blue-800 active:bg-blue-800 transition ease-in-out duration-300 focus:outline-none focus:ring-0 border-0"
         >

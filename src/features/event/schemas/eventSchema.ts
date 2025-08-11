@@ -63,3 +63,22 @@ export const updateEventSchema = yup.object().shape({
       })
   ),
 });
+
+export const PromoSchema = yup.object().shape({
+  discountValue: yup.number()
+    .min(0, 'Nilai diskon minimal 0%')
+    .max(100, 'Nilai diskon maksimal 100%')
+    .required('Nilai diskon wajib diisi'),
+  description: yup.string()
+    .required('Deskripsi wajib diisi'),
+  availableCoupon: yup.number()
+    .min(1, 'Jumlah kupon minimal 1')
+    .required('Jumlah kupon wajib diisi'),
+  eventId: yup.string()
+    .required('Nama acara wajib dipilih'),
+  startDate: yup.date()
+    .required('Tanggal mulai wajib diisi'),
+  endDate: yup.date()
+    .required('Tanggal selesai wajib diisi')
+    .min(yup.ref('startDate'), 'Tanggal selesai tidak boleh sebelum tanggal mulai'),
+});

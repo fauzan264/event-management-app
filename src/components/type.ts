@@ -36,10 +36,18 @@ export interface ITransaction {
   id: string;
   imageUrl: string;
   eventName: string;
-  startDate: string; // bisa pakai Date kalau mau parsing langsung
-  endDate: string;
+  startDate: string; 
   quantity: number;
   finalPrice: number;
   orderStatus: string;
   createdAt: string;
+}
+
+export interface IPromo {
+  discountValue: number | '';
+  description: string;
+  availableCoupon: number | '';
+  startDate: string;
+  endDate: string;
+  eventId: string;
 }
