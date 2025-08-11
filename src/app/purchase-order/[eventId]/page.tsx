@@ -1,26 +1,26 @@
 "use client";
 import { formatDate } from "@/utils/dateFormatter";
-import { IEventList } from "@/components/type";
+import { IEventList, IPromo } from "@/components/type";
 import axios from "axios";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { formatPrice } from "@/utils/priceFormatter";
 import { FaMoneyBillTransfer } from "react-icons/fa6";
 import { useFormik } from "formik";
 import useAuthStore from "@/store/useAuthStore";
-import { useRouter } from "next/navigation";
-
-
 
 export default function PurchaseOrder() {
   const router = useRouter();
-
   const { token } = useAuthStore();
   const { eventId } = useParams();
+
+  const [total, setTotal] = useState(0);
+  const [discountValue, setDiscountValue] = useState(0);
+
   const [event, setEvent] = useState<IEventList | null>(null);
   const [totalUserPoint, setTotalUserPoint] = useState(0);
-
+  const [promos, setPromos] = useState<IPromo[]>([]);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
 
@@ -53,8 +53,6 @@ export default function PurchaseOrder() {
         );
 
         const orderId = res.data.data.id;
-
-        console.log("Order berhasil:", res.data);
         alert("Order berhasil dibuat!");
         router.push(`/purchase-order/uploadPayment/${orderId}`);
       } catch (error) {
@@ -68,18 +66,20 @@ export default function PurchaseOrder() {
   const decrement = () => setQuantity((q) => (q > 1 ? q - 1 : 1));
 
   useEffect(() => {
-    const fetchEvent = async () => {
-      if (!eventId) return;
-      try {
-        const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/events/${eventId}`
-        );
-        setEvent(res.data.data);
-      } finally {
-        setLoading(false);
-      }
-    };
+ 
+  const selectedPromo = promos.find(
+    (promo) => promo.id === formik.values.discountId
+  );
 
+  const promoDiscount = selectedPromo?.discountValue || 0;
+  setDiscountValue(promoDiscount);
+
+  const newTotal =
+    (quantity || 0) * (event?.price || 0)- ((event?.price || 0) * (promoDiscount/100)) - totalUserPoint;
+  setTotal(newTotal);
+}, [formik.values.discountId, quantity, event?.price, promos, totalUserPoint]);
+
+  useEffect(() => {
     const fetchUser = async () => {
       try {
         const res = await axios.get(
@@ -99,9 +99,39 @@ export default function PurchaseOrder() {
       }
     };
 
-    fetchEvent();
-    fetchUser();
-  }, [eventId]);
+    const fetchEvent = async () => {
+      try {
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/events/${eventId}`
+        );
+        setEvent(res.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    const fetchCoupon = async () => {
+      try {
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/coupon/promo/${eventId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setPromos(res.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    if (token && eventId) {
+      Promise.all([fetchUser(), fetchEvent(), fetchCoupon()]).finally(() =>
+        setLoading(false)
+      );
+    }
+  }, [token, eventId]);
 
   if (loading) return <p>Loading...</p>;
   if (!event) return <p>Event tidak ditemukan</p>;
@@ -109,6 +139,7 @@ export default function PurchaseOrder() {
   return (
     <main className="p-10 mt-15">
       <div className="grid grid-cols-[5fr_3fr] p-3">
+        {/* Left Side */}
         <div className="flex flex-col items-center bg-white p-3">
           <div>{event.event_name}</div>
           <div>
@@ -147,11 +178,16 @@ export default function PurchaseOrder() {
                 </button>
               </div>
             </div>
+
             <div className="mt-3 text-sm">
               <div className="font-bold">{formatPrice(event.price)}</div>
             </div>
 
-            <form onSubmit={formik.handleSubmit} className="space-y-4 mt-4">
+            {/* Form */}
+            <form
+              onSubmit={formik.handleSubmit}
+              className="space-y-4 mt-4"
+            >
               <div>
                 <label className="block mb-1 font-semibold">Full Name</label>
                 <input
@@ -183,19 +219,21 @@ export default function PurchaseOrder() {
                 className="border px-3 py-2 w-full rounded"
               >
                 <option value="">Use available promo</option>
-                <option value="024b69d8-f092-4111-8208-637342bb1b4a">
-                  Promo 10%
-                </option>
+                {promos.map((promo) => (
+                  <option key={promo.id} value={promo.id}>
+                    {promo.description}
+                  </option>
+                ))}
               </select>
 
               <select
-                name="usePoints"
+                name="userPointsId"
                 value={formik.values.userPointsId || ""}
                 onChange={formik.handleChange}
                 className="border px-3 py-2 w-full rounded"
               >
                 <option value="">Use your user points</option>
-                <option value="use">{`(${totalUserPoint}) points`}</option>
+                <option value="user">{`(${totalUserPoint}) points`}</option>
               </select>
 
               <div className="flex justify-end">
@@ -209,8 +247,13 @@ export default function PurchaseOrder() {
             </form>
           </div>
         </div>
+
+        {/* Right Side */}
         <div className="bg-red-200">
-          <div className="relative w-full" style={{ aspectRatio: "2 / 1" }}>
+          <div
+            className="relative w-full"
+            style={{ aspectRatio: "2 / 1" }}
+          >
             <Image
               src={event.image_url}
               alt="Banner Event"
@@ -226,7 +269,7 @@ export default function PurchaseOrder() {
             </div>
             <div className="flex justify-between">
               <div>Promo</div>
-              <div>{}</div>
+              <div>{formatPrice(event.price * (discountValue/100) )}</div>
             </div>
             <div className="flex justify-between">
               <div>Point used</div>
@@ -234,7 +277,9 @@ export default function PurchaseOrder() {
             </div>
             <div className="flex justify-between">
               <div className="font-bold">Total</div>
-              <div className="bold">{formatPrice((quantity * event.price)-totalUserPoint)}</div>
+              <div className="bold">
+                {formatPrice(total)}
+              </div>
             </div>
           </div>
         </div>
