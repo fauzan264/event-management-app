@@ -1,13 +1,13 @@
 "use client";
 import { formatPrice } from "@/utils/priceFormatter";
 import { formatTime } from "@/utils/timeFormatter";
-import { IPurchaseOrder } from "@/components/type";
 import axios from "axios";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import useAuthStore from "@/store/useAuthStore";
 import { PiSealCheckFill } from "react-icons/pi";
 import { MdCancel } from "react-icons/md";
+import { IPurchaseOrder } from "@/components/type";
 
 export default function UploadPayment() {
   const { token } = useAuthStore();

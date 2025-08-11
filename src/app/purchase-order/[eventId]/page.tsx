@@ -11,10 +11,7 @@ import { useFormik } from "formik";
 import useAuthStore from "@/store/useAuthStore";
 import { useRouter } from "next/navigation";
 
-interface IUserPoint {
-  id: string;
-  points: number;
-}
+
 
 export default function PurchaseOrder() {
   const router = useRouter();
