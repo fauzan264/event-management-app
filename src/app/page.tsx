@@ -8,8 +8,10 @@ import { useEffect, useState } from "react";
 
 export default function Home() {
     const [eventsMusic, setEventsMusic] = useState<[] | IEventList[]>([]);
+    const [loading, setloading] = useState(false);
     const onGetMusicEventList = async () => {
         try {
+            setloading(true);
             const response = await axios.get(
                 `${process.env.NEXT_PUBLIC_API_URL}/api/events?category=MUSIC&limit=3`
             );
@@ -17,12 +19,15 @@ export default function Home() {
             setEventsMusic(response?.data?.data?.events);
         } catch (error) {
             console.error(error);
+        } finally {
+            setloading(false);
         }
     };
 
     const [eventsSport, setEventsSport] = useState<[] | IEventList[]>([]);
     const onGetSportEventList = async () => {
         try {
+            setloading(true);
             const response = await axios.get(
                 `${process.env.NEXT_PUBLIC_API_URL}/api/events?category=SPORT&limit=3`
             );
@@ -30,12 +35,15 @@ export default function Home() {
             setEventsSport(response?.data?.data?.events);
         } catch (error) {
             console.error(error);
+        } finally {
+            setloading(false);
         }
     };
 
     const [eventsEdu, setEventsEdu] = useState<[] | IEventList[]>([]);
     const onGetEduEventList = async () => {
         try {
+            setloading(true);
             const response = await axios.get(
                 `${process.env.NEXT_PUBLIC_API_URL}/api/events?category=EDUCATION&limit=3`
             );
@@ -43,6 +51,8 @@ export default function Home() {
             setEventsEdu(response?.data?.data?.events);
         } catch (error) {
             console.error(error);
+        } finally {
+            setloading(false);
         }
     };
 
@@ -51,6 +61,12 @@ export default function Home() {
         onGetSportEventList();
         onGetEduEventList();
     }, []);
+
+    const renderSkeletons = () => {
+        return Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="skeleton h-100 w-70 rounded-lg" />
+        ));
+    };
 
     return (
         <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
@@ -105,11 +121,13 @@ export default function Home() {
                         🎵 Upcoming Music Events
                     </h2>
                     <div className="grid grid-cols-3 gap-10">
-                        {eventsMusic?.map((item, index) => (
-                            <Link href={`/events/${item.id}`} key={index}>
-                                <EventCard {...item} />
-                            </Link>
-                        ))}
+                        {loading
+                            ? renderSkeletons()
+                            : eventsMusic?.map((item, index) => (
+                                  <Link href={`/events/${item.id}`} key={index}>
+                                      <EventCard {...item} />
+                                  </Link>
+                              ))}
                     </div>
                     <div className="flex justify-center">
                         <Link
@@ -127,11 +145,13 @@ export default function Home() {
                         🏅 Upcoming Sport Events
                     </h2>
                     <div className="grid grid-cols-3 gap-10">
-                        {eventsSport?.map((item, index) => (
-                            <Link href={`/events/${item.id}`} key={index}>
-                                <EventCard {...item} />
-                            </Link>
-                        ))}
+                        {loading
+                            ? renderSkeletons()
+                            : eventsSport?.map((item, index) => (
+                                  <Link href={`/events/${item.id}`} key={index}>
+                                      <EventCard {...item} />
+                                  </Link>
+                              ))}
                     </div>
                     <div className="flex justify-center">
                         <Link
@@ -149,11 +169,13 @@ export default function Home() {
                         🎓 Upcoming Education Events
                     </h2>
                     <div className="grid grid-cols-3 gap-10">
-                        {eventsEdu?.map((item, index) => (
-                            <Link href={`/events/${item.id}`} key={index}>
-                                <EventCard {...item} />
-                            </Link>
-                        ))}
+                        {loading
+                            ? renderSkeletons()
+                            : eventsEdu?.map((item, index) => (
+                                  <Link href={`/events/${item.id}`} key={index}>
+                                      <EventCard {...item} />
+                                  </Link>
+                              ))}
                     </div>
                     <div className="flex justify-center">
                         <Link

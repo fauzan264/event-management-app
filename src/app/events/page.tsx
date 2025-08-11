@@ -11,12 +11,12 @@ export default function EventsPage() {
     const router = useRouter();
     const pathname = usePathname();
 
-    // State untuk query params
+   
     const [categoryInput, setCategoryInput] = useState("");
     const [searchInput, setSearchInput] = useState("");
     const [events, setEvents] = useState<IEventList[]>([]);
 
-    // Ambil query param dari window.location.search saat komponen mount (client side)
+    
     useEffect(() => {
         if (typeof window !== "undefined") {
             const params = new URLSearchParams(window.location.search);

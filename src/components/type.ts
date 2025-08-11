@@ -48,7 +48,8 @@ export interface IPromo {
   discountValue: number | '';
   description: string;
   availableCoupon: number | '';
+  eventId: string;
   startDate: string;
   endDate: string;
-  eventId: string;
+  
 }

@@ -72,46 +72,7 @@ export default function CreatePromo() {
     }
   }, [auth?.id]);
 
-  // const getMyEvent = async ({
-  //   eventOrganizerId,
-  //   eventName,
-  //   category,
-  //   page,
-  //   limit,
-  //   token,
-  // }: Pick<IEvent, "eventOrganizerId" | "eventName" | "category"> & {
-  //   page: string;
-  //   limit: string;
-  //   token: string;
-  // }) => {
-  //   const res = await myEvents({ page = "1", limit = "1000", token });
-  // };
-
-  // useEffect(() => {
-  //   const fetchEvents = async () => {
-  //     if (!token || !id) return;
-
-  //     setLoadingEvents(true);
-
-  //     try {
-  //       const res = await myEvents({
-  //         eventOrganizerId: id,
-  //         eventName: "",
-  //         category: "",
-  //         page: "1",
-  //         limit: "10",
-  //         token,
-  //       });
-  //       setEvents(res.data.data.events);
-  //     } catch (error) {
-  //       console.error("Gagal fetch events", error);
-  //     } finally {
-  //       setLoadingEvents(false);
-  //     }
-  //   };
-
-  //   fetchEvents();
-  // }, [token, id]);
+  
 
   const initialValues: IPromo = {
     discountValue: "",
@@ -127,8 +88,11 @@ export default function CreatePromo() {
     { setSubmitting, resetForm }: FormikHelpers<IPromo>
   ) => {
     try {
+      
       const formData = new FormData();
       formData.append("discountValue", values.discountValue.toString());
+      formData.append("provider_type", "EVENT_ORGANIZER");
+      formData.append("providerId", auth.id)
       formData.append("description", values.description);
       formData.append("availableCoupon", values.availableCoupon.toString());
       formData.append("eventId", values.eventId);
@@ -136,7 +100,7 @@ export default function CreatePromo() {
       formData.append("endDate", values.endDate);
 
       await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/event/promo`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/coupon/promo`,
         formData,
         {
           headers: {
