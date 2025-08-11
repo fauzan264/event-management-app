@@ -1,16 +1,21 @@
 "use client";
 import { IEvent } from "@/features/event/types";
-import { detailEvent } from "@/services/event";
+import { detailEvent, detailEventAttendees } from "@/services/event";
 import camelcaseKeys from "camelcase-keys";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { formattingDateTime } from "../../../../../utils/formattingDate";
 import AuthGuard from "@/hoc/AuthGuard";
+import useAuthStore from "@/store/useAuthStore";
+import { IPurchaseOrder } from "@/components/type";
+import Link from "next/link";
 
 function EventDetailPage() {
+  const { token } = useAuthStore();
   const { id } = useParams<{ id: string }>();
   const [event, setEvent] = useState<IEvent | null>(null);
+  const [attendees, setAttendees] = useState<IPurchaseOrder[] | []>([]);
 
   const getDetailEvent = async () => {
     if (!id) return;
@@ -19,9 +24,34 @@ function EventDetailPage() {
     setEvent(camelcaseKeys(res?.data?.data) as IEvent);
   };
 
+  const getEventAttendees = async ({
+    eventId,
+    token,
+  }: {
+    eventId: string;
+    token: string;
+  }) => {
+    const res = await detailEventAttendees({ eventId, token });
+    const responseData = camelcaseKeys(res.data.data, { deep: true }).map(
+      (res: IPurchaseOrder & { id: string }) => {
+        return {
+          ...res,
+          orderId: res.id,
+        };
+      }
+    );
+    setAttendees(responseData);
+  };
+
+  // console.log(attendees);
+
   useEffect(() => {
     getDetailEvent();
-  }, []);
+
+    if (token) {
+      getEventAttendees({ eventId: id, token });
+    }
+  }, [id, token]);
 
   return (
     <div className="mx-auto w-11/12 my-10">
@@ -129,17 +159,33 @@ function EventDetailPage() {
               <tr>
                 <th className="text-gray-200">Full Name</th>
                 <th className="text-gray-200">Email</th>
+                <th className="text-gray-200">#</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td className="text-gray-200">Ucup</td>
-                <td className="text-gray-200">ucup@mania.com</td>
-              </tr>
-              <tr>
-                <td className="text-gray-200">Jaya</td>
-                <td className="text-gray-200">jaya@mail.com</td>
-              </tr>
+              {attendees?.map((attendee, i) => {
+                return (
+                  <tr key={i}>
+                    <td className="text-gray-200">
+                      <Link
+                        href={`/app/events/detail/user/${attendee.userId}`}
+                        className="link link-success"
+                      >
+                        {attendee.fullName}
+                      </Link>
+                    </td>
+                    <td className="text-gray-200">{attendee.email}</td>
+                    <td>
+                      <Link
+                        href={`/app/transaction-confirmation/detail/${attendee.orderId}`}
+                        className="btn btn-success btn-sm text-gray-200 hover:shadow-md mx-2 my-2"
+                      >
+                        Detail Transaction
+                      </Link>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

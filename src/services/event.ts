@@ -117,3 +117,31 @@ export const deleteEvent = ({
     },
   });
 };
+
+export const detailEventAttendees = ({
+  eventId,
+  token,
+}: {
+  eventId: string;
+  token: string;
+}) => {
+  return axiosInstance.get(`/events/${eventId}/attendees`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const detailEventTransactions = ({
+  eventId,
+  token,
+}: {
+  eventId: string;
+  token: string;
+}) => {
+  return axiosInstance.get(`/events/${eventId}/transactions`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
