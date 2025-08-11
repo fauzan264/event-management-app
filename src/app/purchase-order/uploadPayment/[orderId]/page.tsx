@@ -125,7 +125,7 @@ export default function UploadPayment() {
   }
 
   // For order status : "Waiting for admin confirmation"
-  if (orders.orderStatus === "Waiting for Admin Confirmation") {
+  if (orders.orderStatus === "WAITING_FOR_ADMIN_CONFIRMATION") {
     return (
       <div className="flex flex-col items-center justify-center  h-screen p-10">
         <div className="flex flex-col items-center justify-center w-100 gap-10">
@@ -144,7 +144,7 @@ export default function UploadPayment() {
   }
 
   // For order status : "rejected"
-  if (orders.orderStatus === "Rejected") {
+  if (orders.orderStatus === "REJECTED") {
     return (
       <div className="flex flex-col items-center justify-center  h-screen p-10">
         <div className="flex flex-col items-center justify-center w-100 gap-10">
@@ -163,7 +163,7 @@ export default function UploadPayment() {
   }
 
   // For order status : "Cancel"
-  if (orders.orderStatus === "Cancel") {
+  if (orders.orderStatus === "CANCELED") {
     return (
       <div className="flex flex-col items-center justify-center  h-screen p-10">
         <div className="flex flex-col items-center justify-center w-100 gap-10">
@@ -182,7 +182,7 @@ export default function UploadPayment() {
     );
   }
 
-  if (orders.orderStatus === "Done") {
+  if (orders.orderStatus === "DONE") {
     return (
       <div className="flex flex-col items-center justify-center  h-screen p-10">
         <div className="flex flex-col items-center justify-center w-100 gap-10">
@@ -192,7 +192,7 @@ export default function UploadPayment() {
           <span>
             <PiSealCheckFill size={100} className="text-green-500" />
           </span>
-          <p className="text-white">
+          <p className="text-white text-center">
             Your payment has been validated by the admin. Dont miss your event
             schedule!
           </p>

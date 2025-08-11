@@ -17,7 +17,6 @@ export default function PurchaseOrder() {
   const router = useRouter();
 
   const { token } = useAuthStore();
-  const auth = useAuthStore();
   const { eventId } = useParams();
   const [event, setEvent] = useState<IEventList | null>(null);
   const [totalUserPoint, setTotalUserPoint] = useState(0);
@@ -226,8 +225,16 @@ export default function PurchaseOrder() {
               <div>{formatPrice(event.price)}</div>
             </div>
             <div className="flex justify-between">
+              <div>Promo</div>
+              <div>{}</div>
+            </div>
+            <div className="flex justify-between">
+              <div>Point used</div>
+              <div>- {totalUserPoint}</div>
+            </div>
+            <div className="flex justify-between">
               <div className="font-bold">Total</div>
-              <div className="bold">{formatPrice(quantity * event.price)}</div>
+              <div className="bold">{formatPrice((quantity * event.price)-totalUserPoint)}</div>
             </div>
           </div>
         </div>
