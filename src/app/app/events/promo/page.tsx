@@ -72,8 +72,6 @@ export default function CreatePromo() {
     }
   }, [auth?.id]);
 
-  
-
   const initialValues: IPromo = {
     discountValue: "",
     description: "",
@@ -88,11 +86,11 @@ export default function CreatePromo() {
     { setSubmitting, resetForm }: FormikHelpers<IPromo>
   ) => {
     try {
-      
+      console.log(values.discountValue.toString());
       const formData = new FormData();
       formData.append("discountValue", values.discountValue.toString());
       formData.append("provider_type", "EVENT_ORGANIZER");
-      formData.append("providerId", auth.id)
+      formData.append("providerId", auth.id);
       formData.append("description", values.description);
       formData.append("availableCoupon", values.availableCoupon.toString());
       formData.append("eventId", values.eventId);
