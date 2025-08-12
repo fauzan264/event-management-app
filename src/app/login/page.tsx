@@ -133,7 +133,7 @@ export default function LoginPage() {
                 type="submit"
                 className="btn border-0 bg-pink-500 hover:bg-pink-600 active:bg-pink-600 transition ease-in-out duration-300 text-gray-200 w-full mt-5 focus:outline-none"
               >
-                Register
+                Login
               </button>
             </form>
             <p className="mt-3 text-white">

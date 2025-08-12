@@ -72,8 +72,6 @@ export default function CreatePromo() {
     }
   }, [auth?.id]);
 
-  
-
   const initialValues: IPromo = {
     id : "",
     discountValue: "",
@@ -89,7 +87,6 @@ export default function CreatePromo() {
     { setSubmitting, resetForm }: FormikHelpers<IPromo>
   ) => {
     try {
-      
       const payload = {
       discountValue: values.discountValue,
       provider_type: "EVENT_ORGANIZER",

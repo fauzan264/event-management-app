@@ -11,6 +11,7 @@ export default function Sidebar({ children }: { children: ReactNode }) {
     { href: "/app", label: "Dashboard" },
     { href: "/app/event-organizer", label: "Organizer Profile" },
     { href: "/app/events", label: "Events" },
+    { href: "/app/transactions-organizer", label: "Transaction Organizer" },
     { href: "/app/transactions", label: "Transaction" },
   ];
 
