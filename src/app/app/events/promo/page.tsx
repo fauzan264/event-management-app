@@ -73,7 +73,7 @@ export default function CreatePromo() {
   }, [auth?.id]);
 
   const initialValues: IPromo = {
-    id: "",
+    id : "",
     discountValue: "",
     description: "",
     availableCoupon: "",
@@ -88,15 +88,15 @@ export default function CreatePromo() {
   ) => {
     try {
       const payload = {
-        discountValue: values.discountValue,
-        provider_type: "EVENT_ORGANIZER",
-        providerId: eventOrganizer?.id,
-        description: values.description,
-        availableCoupon: values.availableCoupon,
-        eventId: values.eventId,
-        startDate: values.startDate,
-        endDate: values.endDate,
-      };
+      discountValue: values.discountValue,
+      provider_type: "EVENT_ORGANIZER",
+      providerId: eventOrganizer?.id,
+      description: values.description,
+      availableCoupon: values.availableCoupon,
+      eventId: values.eventId,
+      startDate: values.startDate,
+      endDate: values.endDate,
+    };
 
       await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/api/coupon/promo`,
