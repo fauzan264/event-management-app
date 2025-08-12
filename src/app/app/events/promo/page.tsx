@@ -73,6 +73,7 @@ export default function CreatePromo() {
   }, [auth?.id]);
 
   const initialValues: IPromo = {
+    id: "",
     discountValue: "",
     description: "",
     availableCoupon: "",
@@ -86,20 +87,20 @@ export default function CreatePromo() {
     { setSubmitting, resetForm }: FormikHelpers<IPromo>
   ) => {
     try {
-      console.log(values.discountValue.toString());
-      const formData = new FormData();
-      formData.append("discountValue", values.discountValue.toString());
-      formData.append("provider_type", "EVENT_ORGANIZER");
-      formData.append("providerId", auth.id);
-      formData.append("description", values.description);
-      formData.append("availableCoupon", values.availableCoupon.toString());
-      formData.append("eventId", values.eventId);
-      formData.append("startDate", values.startDate);
-      formData.append("endDate", values.endDate);
+      const payload = {
+        discountValue: values.discountValue,
+        provider_type: "EVENT_ORGANIZER",
+        providerId: eventOrganizer?.id,
+        description: values.description,
+        availableCoupon: values.availableCoupon,
+        eventId: values.eventId,
+        startDate: values.startDate,
+        endDate: values.endDate,
+      };
 
       await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/api/coupon/promo`,
-        formData,
+        payload,
         {
           headers: {
             Authorization: `Bearer ${token}`,
